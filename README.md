@@ -1,1 +1,1 @@
-# MusicBrainz-AndroidLibrary
+# MusicBrainz-Android client
