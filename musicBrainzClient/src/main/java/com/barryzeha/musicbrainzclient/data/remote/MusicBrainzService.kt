@@ -6,6 +6,6 @@ package com.barryzeha.musicbrainzclient.data.remote
  * Copyright (c)  All rights reserved.
  ***/
 
-class ApiService {
+class MusicBrainzService(httpClient: HttpClientProvider) {
 
 }

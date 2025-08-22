@@ -42,9 +42,19 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    // Kotlinx serialization
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.ktor.serialization.kotlinx.json)
     // Ktor client
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.android)
+    implementation(libs.ktor.client.logging)
+    implementation(libs.ktor.client.serialization)
+    implementation(libs.ktor.client.content.negotiation)
     // Ktor http client
     implementation(libs.ktor.client.okhttp)
+    // Koin
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+
 }
