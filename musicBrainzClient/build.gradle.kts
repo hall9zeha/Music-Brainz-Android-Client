@@ -53,8 +53,6 @@ dependencies {
     implementation(libs.ktor.client.content.negotiation)
     // Ktor http client
     implementation(libs.ktor.client.okhttp)
-    // Koin
-    implementation(libs.koin.core)
-    implementation(libs.koin.android)
+
 
 }
