@@ -11,22 +11,27 @@ import io.ktor.client.request.get
  * Copyright (c)  All rights reserved.
  ***/
 
-class MusicBrainzService() {
-    private val client by lazy { HttpClientProvider.create() }
+class MusicBrainzService(private val appName:String?=null,
+                         private val appVersion:String?=null,
+                         private val contact:String?=null ) {
 
-    suspend fun searchRecording(
-        query: String,
-        limit: Int = 50,
-        offset: Int = 0): MusicBrainzResponse {
-        return client.get("recording"){
-            url {
-                parameters.append("query", query)
-                parameters.append("limit", limit.toString())
-                parameters.append("offset", offset.toString())
-            }
-        }.body()
-    }
-    suspend fun getReleaseById(id: String): Release {
-        return client.get("release/$id").body()
-    }
+        private val client by lazy { HttpClientProvider.create(appName,appVersion,contact) }
+
+        suspend fun searchRecording(
+            query: String,
+            limit: Int = 50,
+            offset: Int = 0): MusicBrainzResponse {
+            return client.get("recording"){
+                url {
+                    parameters.append("query", query)
+                    parameters.append("limit", limit.toString())
+                    parameters.append("offset", offset.toString())
+                }
+            }.body()
+        }
+        suspend fun getReleaseById(id: String): Release {
+            return client.get("release/$id").body()
+        }
+
+
 }

@@ -14,9 +14,16 @@ import kotlinx.coroutines.launch
  * Copyright (c)  All rights reserved.
  ***/
 
-class MusicBrainzClient{
+/**
+ * @param appName Nombre de la aplicación que utiliza la API de MusicBrainz. Recomendado para identificar tu app y aprovechar ventajas como mayor límite de peticiones.
+ * @param appVersion Versión de la aplicación. Ayuda a MusicBrainz a gestionar el acceso y soporte.
+ * @param contact Información de contacto (email o URL). Permite a MusicBrainz comunicarse contigo en caso de problemas o para soporte.
+ *
+ * Es recomendable proporcionar estos argumentos para usar la API de MusicBrainz con todas sus ventajas y evitar restricciones.
+ */
+class MusicBrainzClient(private val appName:String?=null,private val appVersion:String?=null, private val contact:String?=null) {
     private val mainScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
-    private val repository: MbRepository  by lazy { MbRepositoryImpl() }
+    private val repository: MbRepository  by lazy { MbRepositoryImpl(appName,appVersion,contact) }
 
     fun serchRecording(
         query: String,

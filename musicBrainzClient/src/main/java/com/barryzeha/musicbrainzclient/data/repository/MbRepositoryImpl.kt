@@ -10,8 +10,8 @@ import com.barryzeha.musicbrainzclient.data.remote.MusicBrainzService
  * Copyright (c)  All rights reserved.
  ***/
 
-class MbRepositoryImpl(): MbRepository {
-    private val musicBrainzService by lazy { MusicBrainzService() }
+class MbRepositoryImpl(private val appName:String?=null,private val appVersion:String?=null, private val contact:String?=null ): MbRepository {
+    private val musicBrainzService by lazy { MusicBrainzService(appName,appVersion,contact) }
     override suspend fun searchRecording(
         query: String,
         limit: Int,

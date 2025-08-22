@@ -19,7 +19,7 @@ import kotlinx.serialization.json.Json
  ***/
 
 object HttpClientProvider {
-    fun create(): HttpClient{
+    fun create(appName:String?=null, appVersion:String?=null, contact:String?=null): HttpClient{
         return HttpClient{
             install(ContentNegotiation){
                 json(
@@ -35,8 +35,11 @@ object HttpClientProvider {
             }
             install(DefaultRequest){
                 url(MUSIC_BRAINZ_BASE_URL)
-                headers.append("Accept", "application/json")
-                headers.append("Content-Type", "application/json")
+                headers["Accept"] = "application/json"
+                headers["Content-Type"] = "application/json"
+                if(appName !=null && appVersion !=null && contact !=null){
+                    headers["User-Agent"] = "$appName/$appVersion ($contact)"
+                }
             }
         }
     }
