@@ -1,5 +1,6 @@
 package com.barryzeha.musicbrainzclient
 
+import com.barryzeha.musicbrainzclient.data.model.entity.response.MbResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.MusicBrainzResponse
 import com.barryzeha.musicbrainzclient.data.repository.MbRepository
 import com.barryzeha.musicbrainzclient.data.repository.MbRepositoryImpl
@@ -29,7 +30,7 @@ class MusicBrainzClient(private val appName:String?=null,private val appVersion:
         query: String,
         limit: Int,
         offset: Int,
-        callback:(MusicBrainzResponse)-> Unit
+        callback:(MbResponse<MusicBrainzResponse>)-> Unit
 
     ){ mainScope.launch {
             val response= repository.searchRecording(query, limit, offset)

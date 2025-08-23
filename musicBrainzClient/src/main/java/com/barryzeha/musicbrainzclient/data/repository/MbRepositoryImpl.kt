@@ -1,6 +1,7 @@
 package com.barryzeha.musicbrainzclient.data.repository
 
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Release
+import com.barryzeha.musicbrainzclient.data.model.entity.response.MbResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.MusicBrainzResponse
 import com.barryzeha.musicbrainzclient.data.remote.MusicBrainzService
 
@@ -16,11 +17,11 @@ class MbRepositoryImpl(private val appName:String?=null,private val appVersion:S
         query: String,
         limit: Int,
         offset: Int
-    ): MusicBrainzResponse {
+    ): MbResponse<MusicBrainzResponse> {
         return musicBrainzService.searchRecording(query, limit, offset)
     }
 
-    override suspend fun getReleaseById(id: String): Release {
+    override suspend fun getReleaseById(id: String): MbResponse<Release> {
         return musicBrainzService.getReleaseById(id)
     }
 }

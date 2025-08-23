@@ -1,6 +1,7 @@
 package com.barryzeha.musicbrainzclient.data.repository
 
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Release
+import com.barryzeha.musicbrainzclient.data.model.entity.response.MbResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.MusicBrainzResponse
 
 /****
@@ -14,6 +15,6 @@ interface MbRepository {
         query: String,
         limit: Int,
         offset: Int
-    ): MusicBrainzResponse
-    suspend fun getReleaseById(id: String): Release
+    ): MbResponse<MusicBrainzResponse>
+    suspend fun getReleaseById(id: String): MbResponse<Release>
 }

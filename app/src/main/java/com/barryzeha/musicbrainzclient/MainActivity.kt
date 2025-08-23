@@ -6,6 +6,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.barryzeha.musicbrainzclient.common.onError
+import com.barryzeha.musicbrainzclient.common.onSuccess
+import com.barryzeha.musicbrainzclient.data.model.entity.response.MbResponse
 import com.barryzeha.musicbrainzclient.data.remote.MusicBrainzService
 import com.barryzeha.musicbrainzclient.data.repository.MbRepositoryImpl
 
@@ -21,11 +24,19 @@ class MainActivity : AppCompatActivity() {
         }
         val mbService = MusicBrainzClient()
         mbService.serchRecording(
-            "recording:\"I don't wanna go\" AND artist:\"Kidburn\"",
+            "recording:\"I don't wanna go\" AND artist:\"Kidb\"",
             1,
             1
         ) { response ->
-            Log.e("RESPONSE_MUZIC", response.toString())
+               response.onSuccess {
+                   Log.d("RESPONSE_MUZIC", "Éxito: $it")
+               }
+                response.onError{
+                    Log.e("RESPONSE_MUZIC", "Error ${it.errorCode}: ${it.message}")
+                    it.cause?.printStackTrace()
+
+                }
+
         }
     }
 }
