@@ -11,8 +11,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Release(
-    val id: String,
-    val title: String,
+    val id: String?,
+    val title: String?,
     val status: String? = null,
     val date: String? = null,
     val country: String? = null,

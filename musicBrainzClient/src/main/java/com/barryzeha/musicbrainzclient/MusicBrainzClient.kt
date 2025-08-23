@@ -1,7 +1,8 @@
 package com.barryzeha.musicbrainzclient
 
 import com.barryzeha.musicbrainzclient.data.model.entity.response.MbResponse
-import com.barryzeha.musicbrainzclient.data.model.entity.response.MusicBrainzResponse
+import com.barryzeha.musicbrainzclient.data.model.entity.response.RecordingResponse
+import com.barryzeha.musicbrainzclient.data.model.entity.response.ReleaseResponse
 import com.barryzeha.musicbrainzclient.data.repository.MbRepository
 import com.barryzeha.musicbrainzclient.data.repository.MbRepositoryImpl
 import kotlinx.coroutines.CoroutineScope
@@ -30,10 +31,19 @@ class MusicBrainzClient(private val appName:String?=null,private val appVersion:
         query: String,
         limit: Int,
         offset: Int,
-        callback:(MbResponse<MusicBrainzResponse>)-> Unit
+        callback:(MbResponse<RecordingResponse>)-> Unit
 
     ){ mainScope.launch {
             val response= repository.searchRecording(query, limit, offset)
+            callback(response)
+        }
+    }
+    fun getReleaseById(
+        id: String,
+        callback:(MbResponse<ReleaseResponse>)-> Unit
+
+    ){ mainScope.launch {
+            val response= repository.searchReleaseById(id)
             callback(response)
         }
     }

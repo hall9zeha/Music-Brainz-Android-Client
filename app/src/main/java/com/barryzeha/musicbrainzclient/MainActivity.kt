@@ -8,9 +8,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.barryzeha.musicbrainzclient.common.onError
 import com.barryzeha.musicbrainzclient.common.onSuccess
-import com.barryzeha.musicbrainzclient.data.model.entity.response.MbResponse
-import com.barryzeha.musicbrainzclient.data.remote.MusicBrainzService
-import com.barryzeha.musicbrainzclient.data.repository.MbRepositoryImpl
+import com.barryzeha.musicbrainzclient.common.utils.RecordingQueryBuilder
+import com.barryzeha.musicbrainzclient.common.utils.ReleaseQueryBuilder
+
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,8 +23,17 @@ class MainActivity : AppCompatActivity() {
             insets
         }
         val mbService = MusicBrainzClient()
+
+        val query = RecordingQueryBuilder()
+            .title("I don't wanna go")
+            .artist("Kidburn")
+            .build()
+        val releaseQuery= ReleaseQueryBuilder()
+            .releaseId("4ad149df-86f9-47c5-96f3-8db9ffd66da4")
+            .build()
+
         mbService.serchRecording(
-            "recording:\"I don't wanna go\" AND artist:\"Kidb\"",
+            query,
             1,
             1
         ) { response ->
@@ -37,6 +46,16 @@ class MainActivity : AppCompatActivity() {
 
                 }
 
+        }
+        mbService.getReleaseById(releaseQuery) {
+            it.onSuccess {
+                Log.d("RESPONSE_MUZIC_RELEASE", "Éxito: $it")
+            }
+            it.onError{
+                Log.e("RESPONSE_MUZIC_RELEASE", "Error ${it.errorCode}: ${it.message}")
+                it.cause?.printStackTrace()
+
+            }
         }
     }
 }
