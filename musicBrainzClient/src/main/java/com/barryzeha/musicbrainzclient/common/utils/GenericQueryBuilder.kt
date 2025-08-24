@@ -1,5 +1,7 @@
 package com.barryzeha.musicbrainzclient.common.utils
 
+import com.barryzeha.musicbrainzclient.common.QueryField
+
 /****
  * Project MusicBrainz
  * Created by Barry Zea H. on 23/08/25.
@@ -8,8 +10,9 @@ package com.barryzeha.musicbrainzclient.common.utils
 
 class GenericQueryBuilder {
     private val parts = mutableListOf<String>()
-    fun field(field: String, value: String)= apply {
-        parts.add("$field:\"$value\"")
+    fun field(field: QueryField, value: String) = apply {
+        val escaped = value.replace("\"", "\\\"")
+        parts.add("${field.key}:\"$escaped\"")
     }
     fun build(): String = parts.joinToString(" AND ")
 }

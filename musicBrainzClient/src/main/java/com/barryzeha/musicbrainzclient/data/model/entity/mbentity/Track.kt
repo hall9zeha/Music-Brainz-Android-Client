@@ -13,5 +13,6 @@ data class Track(
     val id: String,
     val number: String,
     val title: String,
-    val length: Long? = null
+    val length: Long? = null,
+    val recording: Recording? = null
 )

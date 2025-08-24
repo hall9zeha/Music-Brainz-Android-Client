@@ -2,13 +2,10 @@ package com.barryzeha.musicbrainzclient.common
 
 import com.barryzeha.musicbrainzclient.data.model.entity.response.ErrorResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.MbResponse
-import com.barryzeha.musicbrainzclient.data.model.entity.response.MusicBrainzResponse
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.isSuccess
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlin.reflect.KClass
 
 /****
  * Project MusicBrainz

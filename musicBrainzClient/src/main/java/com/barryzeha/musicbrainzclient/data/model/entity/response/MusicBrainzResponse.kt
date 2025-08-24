@@ -6,11 +6,18 @@ package com.barryzeha.musicbrainzclient.data.model.entity.response
  * Copyright (c)  All rights reserved.
  ***/
 
+import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Alias
+import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Area
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Artist
+import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.ArtistCredit
+import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Label
+import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.LifeSpan
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Place
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Recording
+import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Relation
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Release
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.ReleaseGroup
+import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Track
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Work
 import kotlinx.serialization.Serializable
 
@@ -64,3 +71,161 @@ data class PlaceResponse(
 )
 // Lookup Responses
 
+@Serializable
+data class AreaLookupResponse(
+    val id: String,
+    val name: String,
+    val type: String? = null,
+    val disambiguation: String? = null,
+    val iso31661Codes: List<String> = emptyList(),
+    val iso31662Codes: List<String> = emptyList(),
+    val iso31663Codes: List<String> = emptyList(),
+    val lifeSpan: LifeSpan? = null
+)
+
+@Serializable
+data class ArtistLookupResponse(
+    val id: String,
+    val name: String,
+    val sortName: String? = null,
+    val type: String? = null,
+    val gender: String? = null,
+    val country: String? = null,
+    val disambiguation: String? = null,
+    val lifeSpan: LifeSpan? = null,
+    val aliases: List<Alias> = emptyList(),
+    val recordings: List<Recording> = emptyList(),
+    val releaseGroups: List<ReleaseGroup> = emptyList()
+)
+
+@Serializable
+data class EventLookupResponse(
+    val id: String,
+    val name: String,
+    val type: String? = null,
+    val time: String? = null,
+    val cancelled: Boolean? = null,
+    val disambiguation: String? = null,
+    val lifeSpan: LifeSpan? = null,
+    val relations: List<Relation> = emptyList()
+)
+
+@Serializable
+data class GenreLookupResponse(
+    val id: String,
+    val name: String,
+    val disambiguation: String? = null
+)
+
+@Serializable
+data class InstrumentLookupResponse(
+    val id: String,
+    val name: String,
+    val type: String? = null,
+    val description: String? = null,
+    val disambiguation: String? = null,
+    val aliases: List<Alias> = emptyList()
+)
+
+@Serializable
+data class LabelLookupResponse(
+    val id: String,
+    val name: String,
+    val type: String? = null,
+    val country: String? = null,
+    val disambiguation: String? = null,
+    val lifeSpan: LifeSpan? = null,
+    val labelCode: Int? = null,
+    val releases: List<Release> = emptyList()
+)
+
+@Serializable
+data class PlaceLookupResponse(
+    val id: String,
+    val name: String,
+    val type: String? = null,
+    val address: String? = null,
+    val coordinates: Coordinates? = null,
+    val area: Area? = null,
+    val disambiguation: String? = null,
+    val lifeSpan: LifeSpan? = null
+)
+
+@Serializable
+data class RecordingLookupResponse(
+    val id: String,
+    val title: String,
+    val length: Int? = null,
+    val disambiguation: String? = null,
+    val video: Boolean? = null,
+    val artistCredits: List<ArtistCredit> = emptyList(),
+    val releases: List<Release> = emptyList()
+)
+
+@Serializable
+data class ReleaseLookupResponse(
+    val id: String,
+    val title: String,
+    val status: String? = null,
+    val date: String? = null,
+    val country: String? = null,
+    val disambiguation: String? = null,
+    val releaseGroup: ReleaseGroup? = null,
+    val trackCount: Int? = null,
+    val media: List<Medium> = emptyList(),
+    val labelInfo: List<LabelInfo> = emptyList()
+)
+
+@Serializable
+data class ReleaseGroupLookupResponse(
+    val id: String,
+    val title: String,
+    val primaryType: String? = null,
+    val secondaryTypes: List<String> = emptyList(),
+    val firstReleaseDate: String? = null,
+    val artistCredits: List<ArtistCredit> = emptyList(),
+    val releases: List<Release> = emptyList()
+)
+
+@Serializable
+data class UrlLookupResponse(
+    val id: String,
+    val resource: String,
+    val relationList: List<Relation> = emptyList()
+)
+
+@Serializable
+data class WorkLookupResponse(
+    val id: String,
+    val title: String,
+    val type: String? = null,
+    val disambiguation: String? = null,
+    val languages: List<String> = emptyList(),
+    val iswcs: List<String> = emptyList(),
+    val artistCredits: List<ArtistCredit> = emptyList()
+)
+@Serializable
+data class Medium(
+    val position: Int? = null,
+    val format: String? = null,
+    val trackCount: Int? = null,
+    val title: String? = null,
+    val discs: List<Disc> = emptyList(),
+    val tracks: List<Track> = emptyList()
+)
+@Serializable
+data class Disc(
+    val id: String,
+    val sectors: Int? = null,
+    val offsetCount: Int? = null
+)
+@Serializable
+data class Coordinates(
+    val latitude: Double? = null,
+    val longitude: Double? = null
+)
+@Serializable
+data class LabelInfo(
+    val catalogNumber: String? = null,
+    val label: Label? = null
+)

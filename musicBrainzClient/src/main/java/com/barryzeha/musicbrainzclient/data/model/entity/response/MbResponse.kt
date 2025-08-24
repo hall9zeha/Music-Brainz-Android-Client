@@ -1,5 +1,7 @@
 package com.barryzeha.musicbrainzclient.data.model.entity.response
 
+import kotlin.reflect.KClass
+
 /****
  * Project MusicBrainz
  * Created by Barry Zea H. on 23/08/25.
