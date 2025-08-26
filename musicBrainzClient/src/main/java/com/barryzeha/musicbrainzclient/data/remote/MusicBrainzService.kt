@@ -5,6 +5,7 @@ import com.barryzeha.musicbrainzclient.common.SearchEntity
 import com.barryzeha.musicbrainzclient.common.processResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Release
 import com.barryzeha.musicbrainzclient.data.model.entity.response.ArtistResponse
+import com.barryzeha.musicbrainzclient.data.model.entity.response.CoverArtResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.MbResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.RecordingResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.ReleaseResponse
@@ -21,6 +22,8 @@ class MusicBrainzService(private val appName:String?=null,
                          private val contact:String?=null ) {
 
         val client by lazy { HttpClientProvider.create(appName,appVersion,contact) }
+        val coverArtClient by lazy { HttpClientProvider.createCoverArtClient() }
+
     // Generic search function for different entities
     suspend inline fun <reified T>searchEntity(
         entity: SearchEntity,
@@ -38,6 +41,28 @@ class MusicBrainzService(private val appName:String?=null,
             }
         }
 
+    }
+    // Generic lookup function for different entities
+    suspend  inline fun<reified T> lookupEntity(
+        entity: LookupEntity,
+        mbId: String,
+        inc: String?=null
+    ): MbResponse<T> {
+        return processResponse {
+            client.get("${entity.path}/$mbId"){
+                url {
+                    inc?.let {
+                        parameters.append("inc", it)
+                    }
+                }
+            }
+        }
+    }
+    // Specific fetches function for cover art archive
+    suspend fun fetchCoverArt(mbId: String): MbResponse<CoverArtResponse>{
+        return processResponse {
+            coverArtClient.get("release/$mbId")
+        }
     }
     // Specific search function for recordings
         suspend fun searchRecording(
@@ -110,21 +135,7 @@ class MusicBrainzService(private val appName:String?=null,
             }
 
         }
-    suspend  inline fun<reified T> lookupEntity(
-        entity: LookupEntity,
-        mbId: String,
-        inc: String?=null
-        ): MbResponse<T> {
-        return processResponse {
-            client.get("${entity.path}/$mbId"){
-                url {
-                    inc?.let {
-                        parameters.append("inc", it)
-                    }
-                }
-            }
-        }
-    }
+
     suspend fun lookupReleaseById(id: String): MbResponse<Release> {
         return processResponse {
             client.get("release/$id")

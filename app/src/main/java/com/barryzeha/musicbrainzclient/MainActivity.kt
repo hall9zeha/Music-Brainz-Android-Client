@@ -99,5 +99,16 @@ class MainActivity : AppCompatActivity() {
 
             }
         }
+        // Cover Art
+        mbService.fetchCoverArt(mbId = "99b09d02-9cc9-3fed-8431-f162165a9371") {
+            it.onSuccess { coverArtResponse ->
+                Log.d("RESPONSE_MUZIC_COVER_ART", "Éxito: $coverArtResponse")
+
+            }
+            it.onError { error ->
+                Log.e("RESPONSE_MUZIC_COVER_ART", "Error ${error.errorCode}: ${error.message}")
+                error.cause?.printStackTrace()
+            }
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.barryzeha.musicbrainzclient.data.remote
 
+import com.barryzeha.musicbrainzclient.common.COVER_ARCHIVE_BASE_URL
 import com.barryzeha.musicbrainzclient.common.MUSIC_BRAINZ_BASE_URL
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.DefaultRequest
@@ -40,6 +41,27 @@ object HttpClientProvider {
                 if(appName !=null && appVersion !=null && contact !=null){
                     headers["User-Agent"] = "$appName/$appVersion ($contact)"
                 }
+            }
+        }
+    }
+    fun createCoverArtClient(): HttpClient {
+        return HttpClient {
+            install(ContentNegotiation) {
+                json(
+                    Json {
+                        prettyPrint = true
+                        ignoreUnknownKeys = true
+                        isLenient = true
+                    })
+            }
+            install(Logging) {
+                level = LogLevel.INFO
+                logger = Logger.DEFAULT
+            }
+            install(DefaultRequest) {
+                url(COVER_ARCHIVE_BASE_URL)
+                headers["Accept"] = "application/json"
+                headers["Content-Type"] = "application/json"
             }
         }
     }
