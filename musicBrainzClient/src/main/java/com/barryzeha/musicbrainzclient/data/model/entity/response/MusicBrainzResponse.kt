@@ -10,6 +10,7 @@ import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Alias
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Area
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Artist
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.ArtistCredit
+import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Genre
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Label
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.LifeSpan
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Place
@@ -17,8 +18,10 @@ import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Recording
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Relation
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Release
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.ReleaseGroup
+import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Tag
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Track
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Work
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 // Search Responses
@@ -81,7 +84,7 @@ data class AreaLookupResponse(
     val iso31662Codes: List<String> = emptyList(),
     val iso31663Codes: List<String> = emptyList(),
     val lifeSpan: LifeSpan? = null
-)
+): LookupIncludes()
 
 @Serializable
 data class ArtistLookupResponse(
@@ -93,10 +96,10 @@ data class ArtistLookupResponse(
     val country: String? = null,
     val disambiguation: String? = null,
     val lifeSpan: LifeSpan? = null,
-    val aliases: List<Alias> = emptyList(),
-    val recordings: List<Recording> = emptyList(),
-    val releaseGroups: List<ReleaseGroup> = emptyList()
-)
+    //val aliases: List<Alias> = emptyList(),
+    //val recordings: List<Recording> = emptyList(),
+    //val releaseGroups: List<ReleaseGroup> = emptyList()
+): LookupIncludes()
 
 @Serializable
 data class EventLookupResponse(
@@ -107,15 +110,15 @@ data class EventLookupResponse(
     val cancelled: Boolean? = null,
     val disambiguation: String? = null,
     val lifeSpan: LifeSpan? = null,
-    val relations: List<Relation> = emptyList()
-)
+    //val relations: List<Relation> = emptyList()
+): LookupIncludes()
 
 @Serializable
 data class GenreLookupResponse(
     val id: String,
     val name: String,
     val disambiguation: String? = null
-)
+): LookupIncludes()
 
 @Serializable
 data class InstrumentLookupResponse(
@@ -124,8 +127,8 @@ data class InstrumentLookupResponse(
     val type: String? = null,
     val description: String? = null,
     val disambiguation: String? = null,
-    val aliases: List<Alias> = emptyList()
-)
+    //val aliases: List<Alias> = emptyList()
+): LookupIncludes()
 
 @Serializable
 data class LabelLookupResponse(
@@ -136,8 +139,8 @@ data class LabelLookupResponse(
     val disambiguation: String? = null,
     val lifeSpan: LifeSpan? = null,
     val labelCode: Int? = null,
-    val releases: List<Release> = emptyList()
-)
+    //val releases: List<Release> = emptyList()
+): LookupIncludes()
 
 @Serializable
 data class PlaceLookupResponse(
@@ -149,7 +152,7 @@ data class PlaceLookupResponse(
     val area: Area? = null,
     val disambiguation: String? = null,
     val lifeSpan: LifeSpan? = null
-)
+): LookupIncludes()
 
 @Serializable
 data class RecordingLookupResponse(
@@ -158,9 +161,10 @@ data class RecordingLookupResponse(
     val length: Int? = null,
     val disambiguation: String? = null,
     val video: Boolean? = null,
+    @SerialName("artist-credit")
     val artistCredits: List<ArtistCredit> = emptyList(),
-    val releases: List<Release> = emptyList()
-)
+    //val releases: List<Release> = emptyList()
+): LookupIncludes()
 
 @Serializable
 data class ReleaseLookupResponse(
@@ -174,7 +178,7 @@ data class ReleaseLookupResponse(
     val trackCount: Int? = null,
     val media: List<Medium> = emptyList(),
     val labelInfo: List<LabelInfo> = emptyList()
-)
+): LookupIncludes()
 
 @Serializable
 data class ReleaseGroupLookupResponse(
@@ -184,15 +188,15 @@ data class ReleaseGroupLookupResponse(
     val secondaryTypes: List<String> = emptyList(),
     val firstReleaseDate: String? = null,
     val artistCredits: List<ArtistCredit> = emptyList(),
-    val releases: List<Release> = emptyList()
-)
+    //val releases: List<Release> = emptyList()
+): LookupIncludes()
 
 @Serializable
 data class UrlLookupResponse(
     val id: String,
     val resource: String,
     val relationList: List<Relation> = emptyList()
-)
+): LookupIncludes()
 
 @Serializable
 data class WorkLookupResponse(
@@ -202,8 +206,9 @@ data class WorkLookupResponse(
     val disambiguation: String? = null,
     val languages: List<String> = emptyList(),
     val iswcs: List<String> = emptyList(),
+    @SerialName("artist-credit")
     val artistCredits: List<ArtistCredit> = emptyList()
-)
+): LookupIncludes()
 @Serializable
 data class Medium(
     val position: Int? = null,
@@ -212,20 +217,38 @@ data class Medium(
     val title: String? = null,
     val discs: List<Disc> = emptyList(),
     val tracks: List<Track> = emptyList()
-)
+): LookupIncludes()
 @Serializable
 data class Disc(
     val id: String,
     val sectors: Int? = null,
     val offsetCount: Int? = null
-)
+): LookupIncludes()
 @Serializable
 data class Coordinates(
     val latitude: Double? = null,
     val longitude: Double? = null
-)
+): LookupIncludes()
 @Serializable
 data class LabelInfo(
     val catalogNumber: String? = null,
     val label: Label? = null
+): LookupIncludes()
+
+// Include support
+@Serializable
+open class LookupIncludes(
+    val recordings: List<Recording>? = null,
+    val releases: List<Release>? = null,
+    val releaseGroups: List<ReleaseGroup>? = null,
+    val works: List<Work>? = null,
+    val artists: List<Artist>? = null,
+    val labels: List<Label>? = null,
+    val aliases: List<Alias>? = null,
+    val tags: List<Tag>? = null,
+    val relations: List<Relation>? = null,
+    val userGenres: List<Genre>? = null,
+    val userTags: List<Tag>? = null,
+    val genres: List<Genre>? = null
+
 )

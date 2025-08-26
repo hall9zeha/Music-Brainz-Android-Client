@@ -12,5 +12,6 @@ import kotlinx.serialization.Serializable
 data class Genre(
     val id: String,
     val name: String,
-    val disambiguation: String? = null
+    val disambiguation: String? = null,
+    val count: Int? = null
 )

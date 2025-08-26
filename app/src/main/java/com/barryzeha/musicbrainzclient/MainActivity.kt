@@ -11,6 +11,7 @@ import com.barryzeha.musicbrainzclient.common.SearchEntity
 import com.barryzeha.musicbrainzclient.common.SearchField
 import com.barryzeha.musicbrainzclient.common.onError
 import com.barryzeha.musicbrainzclient.common.onSuccess
+import com.barryzeha.musicbrainzclient.common.utils.GenericIncludeBuilder
 import com.barryzeha.musicbrainzclient.common.utils.RecordingQueryBuilder
 import com.barryzeha.musicbrainzclient.common.utils.ReleaseQueryBuilder
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Recording
@@ -37,7 +38,9 @@ class MainActivity : AppCompatActivity() {
         val releaseQuery= ReleaseQueryBuilder()
             .releaseId("4ad149df-86f9-47c5-96f3-8db9ffd66da4")
             .build()
-
+        val includeFields = GenericIncludeBuilder()
+            .incArtistCredits()
+            .build()
         mbService.serchRecording(
             query,
             1,
@@ -72,6 +75,7 @@ class MainActivity : AppCompatActivity() {
 
             }
         }
+        // Lookup
         mbService.lookupEntity<RecordingLookupResponse>(
             LookupEntity.RECORDING,
             "b9ad642e-b012-41c7-b72a-42cf4911f9ff",
@@ -89,6 +93,7 @@ class MainActivity : AppCompatActivity() {
 
             }
         }
+
         mbService.getReleaseById(releaseQuery) {
             it.onSuccess {
                 Log.d("RESPONSE_MUZIC_RELEASE", "Éxito: $it")
@@ -107,6 +112,17 @@ class MainActivity : AppCompatActivity() {
             }
             it.onError { error ->
                 Log.e("RESPONSE_MUZIC_COVER_ART", "Error ${error.errorCode}: ${error.message}")
+                error.cause?.printStackTrace()
+            }
+        }
+        // Lookup with include field
+        mbService.lookupEntity<RecordingLookupResponse>(LookupEntity.RECORDING,"b9ad642e-b012-41c7-b72a-42cf4911f9ff","artist-credits") {
+            it.onSuccess { recordingLookupResponse ->
+                Log.d("RESPONSE_MUZIC_LOOKUP_INC", "Éxito: $recordingLookupResponse")
+
+            }
+            it.onError { error ->
+                Log.e("RESPONSE_MUZIC_LOOKUP_INC", "Error ${error.errorCode}: ${error.message}")
                 error.cause?.printStackTrace()
             }
         }
