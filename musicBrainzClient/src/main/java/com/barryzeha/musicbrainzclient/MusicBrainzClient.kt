@@ -2,6 +2,7 @@ package com.barryzeha.musicbrainzclient
 
 import com.barryzeha.musicbrainzclient.common.LookupEntity
 import com.barryzeha.musicbrainzclient.common.SearchEntity
+import com.barryzeha.musicbrainzclient.data.model.entity.coverentity.Thumbnails
 import com.barryzeha.musicbrainzclient.data.model.entity.response.CoverArtResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.MbResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.RecordingResponse
@@ -71,6 +72,15 @@ class MusicBrainzClient(private val appName:String?=null,private val appVersion:
 
     ){ mainScope.launch {
             val response= repository.fetchCoverArt(mbId)
+            callback(response)
+        }
+    }
+    fun fetchCoverArtThumbnail(
+        mbId: String,
+        callback:(MbResponse<List<Thumbnails>>)-> Unit
+    ){
+        mainScope.launch {
+            val response = repository.fetchCoverArtThumbnails(mbId)
             callback(response)
         }
     }

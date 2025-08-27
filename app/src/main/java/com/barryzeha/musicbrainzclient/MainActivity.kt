@@ -12,6 +12,7 @@ import com.barryzeha.musicbrainzclient.common.SearchField
 import com.barryzeha.musicbrainzclient.common.onError
 import com.barryzeha.musicbrainzclient.common.onSuccess
 import com.barryzeha.musicbrainzclient.common.utils.GenericIncludeBuilder
+import com.barryzeha.musicbrainzclient.common.utils.GenericQueryBuilder
 import com.barryzeha.musicbrainzclient.common.utils.RecordingQueryBuilder
 import com.barryzeha.musicbrainzclient.common.utils.ReleaseQueryBuilder
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Recording
@@ -35,12 +36,18 @@ class MainActivity : AppCompatActivity() {
             .title("I don't wanna go")
             .artist("Kidburn")
             .build()
+        val queryGeneric = GenericQueryBuilder()
+            .field(SearchField.ARTIST,"Kidburn")
+            .build()
+
         val releaseQuery= ReleaseQueryBuilder()
             .releaseId("4ad149df-86f9-47c5-96f3-8db9ffd66da4")
             .build()
+
         val includeFields = GenericIncludeBuilder()
             .incArtistCredits()
             .build()
+
         mbService.serchRecording(
             query,
             1,
@@ -48,7 +55,6 @@ class MainActivity : AppCompatActivity() {
         ) { response ->
                response.onSuccess {
                    Log.d("RESPONSE_MUZIC", "Éxito: $it")
-                   Log.d("RESPONSE_MUZIC", SearchField.ARTIST.key)
 
                }
                 response.onError{
@@ -60,15 +66,13 @@ class MainActivity : AppCompatActivity() {
         }
         mbService.searchEntity<RecordingResponse>(
             SearchEntity.RECORDING,
-            query,
+            queryGeneric,
             1,
             1
         ) { response ->
             response.onSuccess {
                 Log.d("RESPONSE_MUZIC_GENERIC", "Éxito: $it")
-                Log.d("RESPONSE_MUZIC_GENERIC", SearchField.ARTIST.key)
-
-            }
+                }
             response.onError{
                 Log.e("RESPONSE_MUZIC", "Error ${it.errorCode}: ${it.message}")
                 it.cause?.printStackTrace()
@@ -112,6 +116,17 @@ class MainActivity : AppCompatActivity() {
             }
             it.onError { error ->
                 Log.e("RESPONSE_MUZIC_COVER_ART", "Error ${error.errorCode}: ${error.message}")
+                error.cause?.printStackTrace()
+            }
+        }
+        // CovertArt thumbnails
+        mbService.fetchCoverArtThumbnail(mbId = "99b09d02-9cc9-3fed-8431-f162165a9371") {
+            it.onSuccess { coverArtResponse ->
+                Log.d("RESPONSE_MUZIC_COVER_THUMBNAIL", "Éxito: $coverArtResponse")
+
+            }
+            it.onError { error ->
+                Log.e("RESPONSE_MUZIC_COVER_THUMBNAIL", "Error ${error.errorCode}: ${error.message}")
                 error.cause?.printStackTrace()
             }
         }

@@ -1,6 +1,7 @@
 package com.barryzeha.musicbrainzclient.data.repository
 
 import com.barryzeha.musicbrainzclient.common.SearchEntity
+import com.barryzeha.musicbrainzclient.data.model.entity.coverentity.Thumbnails
 import com.barryzeha.musicbrainzclient.data.model.entity.response.CoverArtResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.MbResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.RecordingResponse
@@ -26,4 +27,5 @@ interface MbRepository {
         offset: Int
     ): MbResponse<T>
     suspend fun fetchCoverArt(mbId: String): MbResponse<CoverArtResponse>
+    suspend fun fetchCoverArtThumbnails(mbId:String): MbResponse<List<Thumbnails>>
 }

@@ -7,10 +7,13 @@ package com.barryzeha.musicbrainzclient.data.model.entity.response
  ***/
 
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Alias
+import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Annotation
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Area
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Artist
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.ArtistCredit
+import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.CdStub
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Genre
+import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Instrument
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Label
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.LifeSpan
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Place
@@ -18,13 +21,59 @@ import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Recording
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Relation
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Release
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.ReleaseGroup
+import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Serie
+import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Series
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Tag
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Track
+import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Url
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Work
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 // Search Responses
+@Serializable
+data class AnnotationResponse(
+    val created: String,
+    val count: Int = 0,
+    val offset: Int = 0,
+    val annotations: List<Annotation> = emptyList()
+)
+@Serializable
+data class AreaResponse(
+    val created: String,
+    val count: Int = 0,
+    val offset: Int = 0,
+    val areas: List<Area> = emptyList()
+)
+@Serializable
+data class CdStubsResponse(
+    val created: String,
+    val count: Int = 0,
+    val offset: Int = 0,
+    val cdstubs: List<CdStub> = emptyList()
+)
+@Serializable
+data class Event(
+    val created: String,
+    val count: Int = 0,
+    val offset: Int = 0,
+    val events: List<Event> = emptyList()
+)
+@Serializable
+data class InstrumentResponse(
+    val created: String,
+    val count: Int = 0,
+    val offset: Int = 0,
+    val instruments: List<Instrument> = emptyList()
+)
+@Serializable
+data class Label(
+    val created: String,
+    val count: Int = 0,
+    val offset: Int = 0,
+    val labels: List<Label> = emptyList()
+)
+
 @Serializable
 data class RecordingResponse(
     val created: String,
@@ -56,7 +105,27 @@ data class ReleaseGroupResponse(
     val offset: Int = 0,
     val releaseGroups: List<ReleaseGroup> = emptyList()
 )
-
+@Serializable
+data class SerieResponse(
+    val created: String,
+    val count: Int = 0,
+    val offset: Int = 0,
+    val series: List<Serie> = emptyList()
+)
+@Serializable
+data class TagResponse(
+    val created: String,
+    val count: Int = 0,
+    val offset: Int = 0,
+    val tags: List<Tag> = emptyList()
+)
+@Serializable
+data class UrlResponse(
+    val created: String,
+    val count: Int = 0,
+    val offset: Int = 0,
+    val urls: List<Url> = emptyList()
+)
 @Serializable
 data class WorkResponse(
     val created: String,
@@ -72,6 +141,7 @@ data class PlaceResponse(
     val offset: Int = 0,
     val places: List<Place> = emptyList()
 )
+
 // Lookup Responses
 
 @Serializable

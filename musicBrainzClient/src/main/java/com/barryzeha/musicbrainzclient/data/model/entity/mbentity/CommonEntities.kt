@@ -8,6 +8,25 @@ package com.barryzeha.musicbrainzclient.data.model.entity.mbentity
 import kotlinx.serialization.Serializable
 
 @Serializable
+data class Annotation(
+    val type:String?,
+    val score:String?,
+    val entity:String?,
+    val name:String?,
+    val text:String?
+
+)
+@Serializable
+data class CdStub(
+    val id:String?,
+    val score:String?,
+    val count:String?,
+    val title:String?,
+    val artist:String?,
+    val barcode:String?,
+    val comment:String?
+)
+@Serializable
 data class Series(
     val id: String,
     val name: String,
@@ -19,6 +38,14 @@ data class Series(
     val tags: List<Tag>? = null,
     val aliases: List<Alias>? = null,
     val relations: List<Relation>? = null
+)
+@Serializable
+data class Serie(
+    val id:String?,
+    val type:String?,
+    val score: String?,
+    val name:String?,
+    val disambiguation:String?
 )
 
 @Serializable

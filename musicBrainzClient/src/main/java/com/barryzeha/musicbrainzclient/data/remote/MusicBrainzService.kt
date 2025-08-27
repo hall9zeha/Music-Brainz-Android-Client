@@ -3,12 +3,14 @@ package com.barryzeha.musicbrainzclient.data.remote
 import com.barryzeha.musicbrainzclient.common.LookupEntity
 import com.barryzeha.musicbrainzclient.common.SearchEntity
 import com.barryzeha.musicbrainzclient.common.processResponse
+import com.barryzeha.musicbrainzclient.data.model.entity.coverentity.Thumbnails
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Release
 import com.barryzeha.musicbrainzclient.data.model.entity.response.ArtistResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.CoverArtResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.MbResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.RecordingResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.ReleaseResponse
+import io.ktor.client.call.body
 import io.ktor.client.request.get
 
 /****
@@ -58,11 +60,31 @@ class MusicBrainzService(private val appName:String?=null,
             }
         }
     }
+    // End generic region
+
     // Specific fetches function for cover art archive
     suspend fun fetchCoverArt(mbId: String): MbResponse<CoverArtResponse>{
         return processResponse {
             coverArtClient.get("release/$mbId")
         }
+    }
+    // Specific request to get only thumbnails url fo cover art
+    suspend fun fetchCoverArtThumbnails(mbId:String): MbResponse<List<Thumbnails>>{
+        val response = processResponse<CoverArtResponse> {
+            coverArtClient.get("release/$mbId")
+        }
+        val thumbnails =  mutableListOf<Thumbnails>()
+        when(response){
+            is MbResponse.Error -> {
+                MbResponse.Error(response.error)
+            }
+            is MbResponse.Success<CoverArtResponse> -> {
+                response.response.images.forEach { image->
+                    thumbnails.add(image.thumbnails)
+                }
+            }
+        }
+        return MbResponse.Success(thumbnails)
     }
     // Specific search function for recordings
         suspend fun searchRecording(
