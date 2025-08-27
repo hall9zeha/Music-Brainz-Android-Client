@@ -1,9 +1,11 @@
 package com.barryzeha.musicbrainzclient
 
+import com.barryzeha.musicbrainzclient.common.COVER_ART_FRONT
 import com.barryzeha.musicbrainzclient.common.LookupEntity
 import com.barryzeha.musicbrainzclient.common.SearchEntity
 import com.barryzeha.musicbrainzclient.data.model.entity.coverentity.Thumbnails
 import com.barryzeha.musicbrainzclient.data.model.entity.response.CoverArtResponse
+import com.barryzeha.musicbrainzclient.data.model.entity.response.CoverArtUrls
 import com.barryzeha.musicbrainzclient.data.model.entity.response.MbResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.RecordingResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.ReleaseResponse
@@ -81,6 +83,17 @@ class MusicBrainzClient(private val appName:String?=null,private val appVersion:
     ){
         mainScope.launch {
             val response = repository.fetchCoverArtThumbnails(mbId)
+            callback(response)
+        }
+    }
+    fun fetchCoverArtSide(
+        mbId:String,
+        side:Int= COVER_ART_FRONT,
+        size:Int=250,
+        callback:(MbResponse<CoverArtUrls>)->Unit
+    ){
+        mainScope.launch {
+            val response = repository.fetchCovertArt(mbId,side,size)
             callback(response)
         }
     }

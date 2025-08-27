@@ -1,5 +1,6 @@
 package com.barryzeha.musicbrainzclient.common
 
+import com.barryzeha.musicbrainzclient.data.model.entity.coverentity.CoverImage
 import com.barryzeha.musicbrainzclient.data.model.entity.response.ErrorResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.MbResponse
 import io.ktor.client.call.body
@@ -48,3 +49,10 @@ inline fun <T> MbResponse<T>.onError(action:(ErrorResponse)->Unit): MbResponse<T
     if(this is MbResponse.Error) action(error)
     return this
 }
+fun CoverImage.getThumbnail(size: Int): String? =
+    when (size) {
+        1200 -> thumbnails.size1200
+        500 -> thumbnails.size500
+        250 -> thumbnails.size250
+        else -> null
+    }

@@ -4,6 +4,7 @@ import com.barryzeha.musicbrainzclient.common.LookupEntity
 import com.barryzeha.musicbrainzclient.common.SearchEntity
 import com.barryzeha.musicbrainzclient.data.model.entity.coverentity.Thumbnails
 import com.barryzeha.musicbrainzclient.data.model.entity.response.CoverArtResponse
+import com.barryzeha.musicbrainzclient.data.model.entity.response.CoverArtUrls
 import com.barryzeha.musicbrainzclient.data.model.entity.response.MbResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.RecordingResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.ReleaseResponse
@@ -60,5 +61,13 @@ class MbRepositoryImpl(private val appName:String?=null,private val appVersion:S
 
     override suspend fun fetchCoverArtThumbnails(mbId: String): MbResponse<List<Thumbnails>> {
         return musicBrainzService.fetchCoverArtThumbnails(mbId)
+    }
+
+    override suspend fun fetchCovertArt(
+        mbId: String,
+        side: Int,
+        size: Int
+    ): MbResponse<CoverArtUrls> {
+        return musicBrainzService.fetchCoverArt(mbId,side,size)
     }
 }

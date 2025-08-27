@@ -6,6 +6,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.barryzeha.musicbrainzclient.common.COVER_ART_BACK
+import com.barryzeha.musicbrainzclient.common.COVER_ART_BOTH_SIDES
 import com.barryzeha.musicbrainzclient.common.LookupEntity
 import com.barryzeha.musicbrainzclient.common.SearchEntity
 import com.barryzeha.musicbrainzclient.common.SearchField
@@ -127,6 +129,18 @@ class MainActivity : AppCompatActivity() {
             }
             it.onError { error ->
                 Log.e("RESPONSE_MUZIC_COVER_THUMBNAIL", "Error ${error.errorCode}: ${error.message}")
+                error.cause?.printStackTrace()
+            }
+        }
+        // CovertArt front or back
+        mbService.fetchCoverArtSide(mbId = "99b09d02-9cc9-3fed-8431-f162165a9371", side= COVER_ART_BOTH_SIDES,size = 500) {
+            it.onSuccess { coverArtResponse ->
+                Log.d("RESPONSE_MUZIC_COVER_FRONT", "${coverArtResponse.front}")
+                Log.d("RESPONSE_MUZIC_COVER_BACK", "${coverArtResponse.back}")
+
+            }
+            it.onError { error ->
+                Log.e("RESPONSE_MUZIC_COVER_FRONT", "Error ${error.errorCode}: ${error.message}")
                 error.cause?.printStackTrace()
             }
         }

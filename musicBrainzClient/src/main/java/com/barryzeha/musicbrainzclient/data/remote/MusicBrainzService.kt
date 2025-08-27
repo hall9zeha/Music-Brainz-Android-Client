@@ -1,16 +1,20 @@
 package com.barryzeha.musicbrainzclient.data.remote
 
+import com.barryzeha.musicbrainzclient.common.COVER_ART_BACK
+import com.barryzeha.musicbrainzclient.common.COVER_ART_BOTH_SIDES
+import com.barryzeha.musicbrainzclient.common.COVER_ART_FRONT
 import com.barryzeha.musicbrainzclient.common.LookupEntity
 import com.barryzeha.musicbrainzclient.common.SearchEntity
+import com.barryzeha.musicbrainzclient.common.getThumbnail
 import com.barryzeha.musicbrainzclient.common.processResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.coverentity.Thumbnails
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Release
 import com.barryzeha.musicbrainzclient.data.model.entity.response.ArtistResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.CoverArtResponse
+import com.barryzeha.musicbrainzclient.data.model.entity.response.CoverArtUrls
 import com.barryzeha.musicbrainzclient.data.model.entity.response.MbResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.RecordingResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.ReleaseResponse
-import io.ktor.client.call.body
 import io.ktor.client.request.get
 
 /****
@@ -76,7 +80,7 @@ class MusicBrainzService(private val appName:String?=null,
         val thumbnails =  mutableListOf<Thumbnails>()
         when(response){
             is MbResponse.Error -> {
-                MbResponse.Error(response.error)
+               return MbResponse.Error(response.error)
             }
             is MbResponse.Success<CoverArtResponse> -> {
                 response.response.images.forEach { image->
@@ -85,6 +89,32 @@ class MusicBrainzService(private val appName:String?=null,
             }
         }
         return MbResponse.Success(thumbnails)
+    }
+    // Specific request to get covert art front or back
+    suspend fun fetchCoverArt(mbId:String, side:Int, size:Int):MbResponse<CoverArtUrls>{
+        return when (val response = processResponse<CoverArtResponse> {
+            coverArtClient.get("release/$mbId")
+        }) {
+            is MbResponse.Error -> response
+
+            is MbResponse.Success -> {
+                val images = response.response.images
+                val coverArt = CoverArtUrls()
+
+                    coverArt.front = when (side) {
+                        COVER_ART_FRONT, COVER_ART_BOTH_SIDES ->
+                           images.firstOrNull { it.front }?.getThumbnail(size)
+                        else -> null
+                    }
+                    coverArt.back = when (side) {
+                        COVER_ART_BACK, COVER_ART_BOTH_SIDES ->
+                            images.firstOrNull { it.back }?.getThumbnail(size)
+                        else -> null
+                    }
+
+                MbResponse.Success(coverArt)
+            }
+        }
     }
     // Specific search function for recordings
         suspend fun searchRecording(
@@ -116,6 +146,7 @@ class MusicBrainzService(private val appName:String?=null,
             }
         }
     }
+
     // Specific search function for releases
     suspend fun searchRelease(
         query: String,
