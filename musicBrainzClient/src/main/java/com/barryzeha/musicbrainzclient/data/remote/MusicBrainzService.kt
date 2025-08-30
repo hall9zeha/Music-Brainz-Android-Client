@@ -1,21 +1,30 @@
 package com.barryzeha.musicbrainzclient.data.remote
 
+import android.util.Log
 import com.barryzeha.musicbrainzclient.common.COVER_ART_BACK
 import com.barryzeha.musicbrainzclient.common.COVER_ART_BOTH_SIDES
 import com.barryzeha.musicbrainzclient.common.COVER_ART_FRONT
 import com.barryzeha.musicbrainzclient.common.LookupEntity
 import com.barryzeha.musicbrainzclient.common.SearchEntity
+import com.barryzeha.musicbrainzclient.common.SearchField
 import com.barryzeha.musicbrainzclient.common.getThumbnail
 import com.barryzeha.musicbrainzclient.common.processResponse
+import com.barryzeha.musicbrainzclient.common.utils.GenericQueryBuilder
+import com.barryzeha.musicbrainzclient.common.utils.RecordingQueryBuilder
 import com.barryzeha.musicbrainzclient.data.model.entity.coverentity.Thumbnails
+import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Recording
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Release
 import com.barryzeha.musicbrainzclient.data.model.entity.response.ArtistResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.CoverArtResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.CoverArtUrls
+import com.barryzeha.musicbrainzclient.data.model.entity.response.ErrorResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.MbResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.RecordingResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.ReleaseResponse
+import io.ktor.client.call.body
 import io.ktor.client.request.get
+import io.ktor.client.statement.HttpResponse
+import io.ktor.http.isSuccess
 
 /****
  * Project MusicBrainz
@@ -64,6 +73,7 @@ class MusicBrainzService(private val appName:String?=null,
             }
         }
     }
+
     // End generic region
 
     // Specific fetches function for cover art archive
@@ -116,6 +126,74 @@ class MusicBrainzService(private val appName:String?=null,
             }
         }
     }
+    // Specific search function for cover art whit name of track
+    // only get first match
+    //TODO refactorizar
+    suspend fun fetchCoverArtByTrackName(trackTitle:String, side:Int, size:Int):MbResponse<CoverArtUrls>{
+        var releaseId:String?=null
+        val regex = Regex("[()]")
+        val queryWithName = GenericQueryBuilder()
+            .field(SearchField.RECORDING,trackTitle)
+            .field(SearchField.ARTIST,"Alex Ubago")
+            .build()
+
+        val recordingResponse = client.get("recording"){
+            url {
+                parameters.append("query", queryWithName)
+                parameters.append("limit", 10.toString())
+                parameters.append("offset", 0.toString())
+            }
+        }
+        if(recordingResponse.status.isSuccess()){
+            val recording = recordingResponse.body<RecordingResponse>().recordings.firstOrNull{
+                val replaced = it.title.replace(regex," ").replace(" ","").lowercase().trim()
+                replaced == trackTitle.lowercase().replace(" ","").trim()
+
+            }
+
+            recording?.let {record->
+                // Si no hay título por artista
+                val recordingId = record.releases?.firstOrNull {release->
+                    release.title?.replace(regex," ")?.replace(" ","")?.lowercase() == trackTitle.lowercase().replace(" ","").trim()
+                }
+                releaseId = recordingId?.id
+                Log.e("FIND_ID_COVER", releaseId.toString())
+        /*    }
+        }
+*/
+        return when (val response = processResponse<CoverArtResponse> {
+            (releaseId?.let {
+                coverArtClient.get("release/$releaseId")
+            }?:{
+                null
+            }) as HttpResponse
+
+        }) {
+            is MbResponse.Error -> response
+
+            is MbResponse.Success -> {
+                val images = response.response.images
+                val coverArt = CoverArtUrls()
+
+                coverArt.front = when (side) {
+                    COVER_ART_FRONT, COVER_ART_BOTH_SIDES ->
+                        images.firstOrNull { it.front }?.getThumbnail(size)
+                    else -> null
+                }
+                coverArt.back = when (side) {
+                    COVER_ART_BACK, COVER_ART_BOTH_SIDES ->
+                        images.firstOrNull { it.back }?.getThumbnail(size)
+                    else -> null
+                }
+
+                return MbResponse.Success(coverArt)
+            }
+        }
+            }
+        }
+        return MbResponse.Error(ErrorResponse(-1,"Error"))
+    }
+
     // Specific search function for recordings
         suspend fun searchRecording(
             query: String,

@@ -1,5 +1,6 @@
 package com.barryzeha.musicbrainzclient.data.repository
 
+import com.barryzeha.musicbrainzclient.common.LookupEntity
 import com.barryzeha.musicbrainzclient.common.SearchEntity
 import com.barryzeha.musicbrainzclient.data.model.entity.coverentity.Thumbnails
 import com.barryzeha.musicbrainzclient.data.model.entity.response.CoverArtResponse
@@ -7,6 +8,7 @@ import com.barryzeha.musicbrainzclient.data.model.entity.response.CoverArtUrls
 import com.barryzeha.musicbrainzclient.data.model.entity.response.MbResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.RecordingResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.ReleaseResponse
+import kotlin.reflect.KClass
 
 /****
  * Project MusicBrainz
@@ -27,7 +29,9 @@ interface MbRepository {
         limit: Int,
         offset: Int
     ): MbResponse<T>
+
     suspend fun fetchCoverArt(mbId: String): MbResponse<CoverArtResponse>
     suspend fun fetchCoverArtThumbnails(mbId:String): MbResponse<List<Thumbnails>>
     suspend fun fetchCovertArt(mbId: String, side:Int, size:Int):MbResponse<CoverArtUrls>
+    suspend fun fetchCoverArtByTrackName(trackTitle: String, side:Int, size:Int):MbResponse<CoverArtUrls>
 }

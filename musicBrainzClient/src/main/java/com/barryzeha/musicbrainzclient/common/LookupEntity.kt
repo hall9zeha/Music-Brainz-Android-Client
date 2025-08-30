@@ -19,5 +19,5 @@ enum class LookupEntity(val path: String) {
     RELEASE_GROUP("release-group"),
     RATING("rating"),
     WORK("work"),
-    URL("url");
+    URL("url")
 }

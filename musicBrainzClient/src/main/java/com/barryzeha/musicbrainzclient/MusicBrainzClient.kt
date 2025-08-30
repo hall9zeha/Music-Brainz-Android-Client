@@ -97,6 +97,17 @@ class MusicBrainzClient(private val appName:String?=null,private val appVersion:
             callback(response)
         }
     }
+    fun fetchCoverArtByTrackName(
+        trackName:String,
+        side:Int= COVER_ART_FRONT,
+        size:Int=250,
+        callback:(MbResponse<CoverArtUrls>)->Unit
+    ){
+        mainScope.launch {
+            val response = repository.fetchCoverArtByTrackName(trackName,side,size)
+            callback(response)
+        }
+    }
     fun getReleaseById(
         id: String,
         callback:(MbResponse<ReleaseResponse>)-> Unit

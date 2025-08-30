@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity() {
             .artist("Kidburn")
             .build()
         val queryGeneric = GenericQueryBuilder()
+            .field(SearchField.RECORDING,"I Don't Wanna Go")
             .field(SearchField.ARTIST,"Kidburn")
             .build()
 
@@ -50,7 +51,7 @@ class MainActivity : AppCompatActivity() {
             .incArtistCredits()
             .build()
 
-        mbService.serchRecording(
+       /* mbService.serchRecording(
             query,
             1,
             1
@@ -65,7 +66,7 @@ class MainActivity : AppCompatActivity() {
 
                 }
 
-        }
+        }*/
         mbService.searchEntity<RecordingResponse>(
             SearchEntity.RECORDING,
             queryGeneric,
@@ -82,7 +83,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         // Lookup
-        mbService.lookupEntity<RecordingLookupResponse>(
+       /* mbService.lookupEntity<RecordingLookupResponse>(
             LookupEntity.RECORDING,
             "b9ad642e-b012-41c7-b72a-42cf4911f9ff",
             null
@@ -98,9 +99,9 @@ class MainActivity : AppCompatActivity() {
                 it.cause?.printStackTrace()
 
             }
-        }
+        }*/
 
-        mbService.getReleaseById(releaseQuery) {
+       /* mbService.getReleaseById(releaseQuery) {
             it.onSuccess {
                 Log.d("RESPONSE_MUZIC_RELEASE", "Éxito: $it")
             }
@@ -109,9 +110,9 @@ class MainActivity : AppCompatActivity() {
                 it.cause?.printStackTrace()
 
             }
-        }
+        }*/
         // Cover Art
-        mbService.fetchCoverArt(mbId = "99b09d02-9cc9-3fed-8431-f162165a9371") {
+       /* mbService.fetchCoverArt(mbId = "99b09d02-9cc9-3fed-8431-f162165a9371") {
             it.onSuccess { coverArtResponse ->
                 Log.d("RESPONSE_MUZIC_COVER_ART", "Éxito: $coverArtResponse")
 
@@ -120,9 +121,9 @@ class MainActivity : AppCompatActivity() {
                 Log.e("RESPONSE_MUZIC_COVER_ART", "Error ${error.errorCode}: ${error.message}")
                 error.cause?.printStackTrace()
             }
-        }
+        }*/
         // CovertArt thumbnails
-        mbService.fetchCoverArtThumbnail(mbId = "99b09d02-9cc9-3fed-8431-f162165a9371") {
+       /* mbService.fetchCoverArtThumbnail(mbId = "99b09d02-9cc9-3fed-8431-f162165a9371") {
             it.onSuccess { coverArtResponse ->
                 Log.d("RESPONSE_MUZIC_COVER_THUMBNAIL", "Éxito: $coverArtResponse")
 
@@ -131,9 +132,9 @@ class MainActivity : AppCompatActivity() {
                 Log.e("RESPONSE_MUZIC_COVER_THUMBNAIL", "Error ${error.errorCode}: ${error.message}")
                 error.cause?.printStackTrace()
             }
-        }
+        }*/
         // CovertArt front or back
-        mbService.fetchCoverArtSide(mbId = "99b09d02-9cc9-3fed-8431-f162165a9371", side= COVER_ART_BOTH_SIDES,size = 500) {
+       /* mbService.fetchCoverArtSide(mbId = "99b09d02-9cc9-3fed-8431-f162165a9371", side= COVER_ART_BOTH_SIDES,size = 500) {
             it.onSuccess { coverArtResponse ->
                 Log.d("RESPONSE_MUZIC_COVER_FRONT", "${coverArtResponse.front}")
                 Log.d("RESPONSE_MUZIC_COVER_BACK", "${coverArtResponse.back}")
@@ -143,9 +144,25 @@ class MainActivity : AppCompatActivity() {
                 Log.e("RESPONSE_MUZIC_COVER_FRONT", "Error ${error.errorCode}: ${error.message}")
                 error.cause?.printStackTrace()
             }
+        }*/
+        // FetchCovert art by track name
+
+        mbService.fetchCoverArtByTrackName("¿Sabes?", side= COVER_ART_BOTH_SIDES,size = 500) {
+            it.onSuccess { coverArtResponse ->
+                Log.d("RESPONSE_MUZIC_COVER_BY_NAME", "${coverArtResponse.front}")
+                Log.d("RESPONSE_MUZIC_COVER_BY_NAME", "${coverArtResponse.back}")
+
+            }
+            it.onError { error ->
+                Log.e("RESPONSE_MUZIC_COVER_BY_NAME", "Error ${error.errorCode}: ${error.message}")
+                error.cause?.printStackTrace()
+            }
         }
+        // End
+
+
         // Lookup with include field
-        mbService.lookupEntity<RecordingLookupResponse>(LookupEntity.RECORDING,"b9ad642e-b012-41c7-b72a-42cf4911f9ff","artist-credits") {
+       /* mbService.lookupEntity<RecordingLookupResponse>(LookupEntity.RECORDING,"b9ad642e-b012-41c7-b72a-42cf4911f9ff","artist-credits") {
             it.onSuccess { recordingLookupResponse ->
                 Log.d("RESPONSE_MUZIC_LOOKUP_INC", "Éxito: $recordingLookupResponse")
 
@@ -154,6 +171,7 @@ class MainActivity : AppCompatActivity() {
                 Log.e("RESPONSE_MUZIC_LOOKUP_INC", "Error ${error.errorCode}: ${error.message}")
                 error.cause?.printStackTrace()
             }
-        }
+        }*/
+
     }
 }
