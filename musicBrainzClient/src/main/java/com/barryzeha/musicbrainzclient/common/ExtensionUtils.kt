@@ -55,3 +55,7 @@ fun CoverImage.getThumbnail(size: Int): String? =
         250 -> thumbnails.size250
         else -> null
     }
+fun String.allTrim():String{
+    val regex = Regex("[()]")
+    return this.replace(regex," ").replace(" ","")
+}

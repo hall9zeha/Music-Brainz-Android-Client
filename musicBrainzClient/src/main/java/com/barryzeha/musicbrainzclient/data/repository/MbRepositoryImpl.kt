@@ -9,7 +9,6 @@ import com.barryzeha.musicbrainzclient.data.model.entity.response.MbResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.RecordingResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.ReleaseResponse
 import com.barryzeha.musicbrainzclient.data.remote.MusicBrainzService
-import kotlin.reflect.KClass
 
 /****
  * Project MusicBrainz
@@ -72,11 +71,12 @@ class MbRepositoryImpl(private val appName:String?=null,private val appVersion:S
         return musicBrainzService.fetchCoverArt(mbId,side,size)
     }
 
-    override suspend fun fetchCoverArtByTrackName(
-        trackTitle: String,
+    override suspend fun fetchCoverArtByTitleAndArtist(
+        title: String,
+        artist:String,
         side: Int,
         size: Int
     ): MbResponse<CoverArtUrls> {
-        return musicBrainzService.fetchCoverArtByTrackName(trackTitle,side,size)
+        return musicBrainzService.fetchCoverArtByTitleAndArtist(title,artist,side,size)
     }
 }

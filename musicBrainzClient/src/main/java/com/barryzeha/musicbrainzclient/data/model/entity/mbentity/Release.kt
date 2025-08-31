@@ -16,6 +16,7 @@ data class Release(
     val status: String? = null,
     val date: String? = null,
     val country: String? = null,
+    @SerialName("artist-credit")val artistCredit: List<ArtistCredit>?=null,
     @SerialName("release-group") val releaseGroup: ReleaseGroup? = null,
     @SerialName("track-count") val trackCount: Int? = null,
     val media: List<Media>? = null

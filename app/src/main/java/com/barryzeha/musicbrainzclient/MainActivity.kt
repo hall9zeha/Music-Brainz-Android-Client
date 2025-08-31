@@ -6,9 +6,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.barryzeha.musicbrainzclient.common.COVER_ART_BACK
 import com.barryzeha.musicbrainzclient.common.COVER_ART_BOTH_SIDES
-import com.barryzeha.musicbrainzclient.common.LookupEntity
 import com.barryzeha.musicbrainzclient.common.SearchEntity
 import com.barryzeha.musicbrainzclient.common.SearchField
 import com.barryzeha.musicbrainzclient.common.onError
@@ -17,8 +15,6 @@ import com.barryzeha.musicbrainzclient.common.utils.GenericIncludeBuilder
 import com.barryzeha.musicbrainzclient.common.utils.GenericQueryBuilder
 import com.barryzeha.musicbrainzclient.common.utils.RecordingQueryBuilder
 import com.barryzeha.musicbrainzclient.common.utils.ReleaseQueryBuilder
-import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Recording
-import com.barryzeha.musicbrainzclient.data.model.entity.response.RecordingLookupResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.RecordingResponse
 
 
@@ -32,7 +28,7 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        val mbService = MusicBrainzClient()
+        val mbService = MusicBrainzClient(appName = "Test app", appVersion = "1.0.0", contact = "mail@mail.com")
 
         val query = RecordingQueryBuilder()
             .title("I don't wanna go")
@@ -67,7 +63,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
         }*/
-        mbService.searchEntity<RecordingResponse>(
+       /* mbService.searchEntity<RecordingResponse>(
             SearchEntity.RECORDING,
             queryGeneric,
             1,
@@ -81,7 +77,7 @@ class MainActivity : AppCompatActivity() {
                 it.cause?.printStackTrace()
 
             }
-        }
+        }*/
         // Lookup
        /* mbService.lookupEntity<RecordingLookupResponse>(
             LookupEntity.RECORDING,
@@ -147,11 +143,10 @@ class MainActivity : AppCompatActivity() {
         }*/
         // FetchCovert art by track name
 
-        mbService.fetchCoverArtByTrackName("¿Sabes?", side= COVER_ART_BOTH_SIDES,size = 500) {
+        mbService.fetchCoverArtByTitleAndArtist("Like a virgin","Madonna", side= COVER_ART_BOTH_SIDES,size = 500) {
             it.onSuccess { coverArtResponse ->
                 Log.d("RESPONSE_MUZIC_COVER_BY_NAME", "${coverArtResponse.front}")
                 Log.d("RESPONSE_MUZIC_COVER_BY_NAME", "${coverArtResponse.back}")
-
             }
             it.onError { error ->
                 Log.e("RESPONSE_MUZIC_COVER_BY_NAME", "Error ${error.errorCode}: ${error.message}")

@@ -1,18 +1,19 @@
 package com.barryzeha.musicbrainzclient.data.remote
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.barryzeha.musicbrainzclient.common.COVER_ART_BACK
 import com.barryzeha.musicbrainzclient.common.COVER_ART_BOTH_SIDES
 import com.barryzeha.musicbrainzclient.common.COVER_ART_FRONT
 import com.barryzeha.musicbrainzclient.common.LookupEntity
 import com.barryzeha.musicbrainzclient.common.SearchEntity
 import com.barryzeha.musicbrainzclient.common.SearchField
+import com.barryzeha.musicbrainzclient.common.allTrim
 import com.barryzeha.musicbrainzclient.common.getThumbnail
 import com.barryzeha.musicbrainzclient.common.processResponse
 import com.barryzeha.musicbrainzclient.common.utils.GenericQueryBuilder
-import com.barryzeha.musicbrainzclient.common.utils.RecordingQueryBuilder
 import com.barryzeha.musicbrainzclient.data.model.entity.coverentity.Thumbnails
-import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Recording
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Release
 import com.barryzeha.musicbrainzclient.data.model.entity.response.ArtistResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.CoverArtResponse
@@ -128,13 +129,15 @@ class MusicBrainzService(private val appName:String?=null,
     }
     // Specific search function for cover art whit name of track
     // only get first match
-    //TODO refactorizar
-    suspend fun fetchCoverArtByTrackName(trackTitle:String, side:Int, size:Int):MbResponse<CoverArtUrls>{
+    //TODO optimizar
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+    suspend fun fetchCoverArtByTitleAndArtist(title:String, artist:String, side:Int, size:Int):MbResponse<CoverArtUrls>{
         var releaseId:String?=null
         val regex = Regex("[()]")
+        var releaseIds: MutableList<String> = mutableListOf()
         val queryWithName = GenericQueryBuilder()
-            .field(SearchField.RECORDING,trackTitle)
-            .field(SearchField.ARTIST,"Alex Ubago")
+            .field(SearchField.RECORDING,title)
+            .field(SearchField.ARTIST,artist)
             .build()
 
         val recordingResponse = client.get("recording"){
@@ -145,32 +148,54 @@ class MusicBrainzService(private val appName:String?=null,
             }
         }
         if(recordingResponse.status.isSuccess()){
-            val recording = recordingResponse.body<RecordingResponse>().recordings.firstOrNull{
-                val replaced = it.title.replace(regex," ").replace(" ","").lowercase().trim()
-                replaced == trackTitle.lowercase().replace(" ","").trim()
+            val recordings = recordingResponse.body<RecordingResponse>().recordings.filter{recording->
+                Log.e("FIND_ID_COVER", "${recording.title.allTrim().lowercase()} == ${title.lowercase().allTrim()}")
+                val release = recording.releases?.firstOrNull {release->
+                    //primero comprobamos que el artista sea el que estamos buscando
+                    val artistCredit = release.artistCredit?.firstOrNull {artistCredit->artistCredit.name.lowercase().allTrim()==artist.lowercase().allTrim()  }
+                    Log.e("FIND_ID_COVER", (artistCredit!=null).toString())
+                    Log.e("FIND_ID_COVER", "${release.title?.allTrim()?.lowercase() }== ${title.allTrim().lowercase()}")
+                    val media = release.media?.firstOrNull { media->
+                        media.format?.trim()?.lowercase() == "Digital Media".trim().lowercase()
+                    }
+                    //if(artistCredit!=null) release.media?.allTrim()?.lowercase() == title.allTrim().lowercase()
+                    if(media!=null) true
+                    else false
+                }
 
+                if(release !=null)recording.title.allTrim().lowercase() == title.lowercase().allTrim()
+                else false
             }
 
-            recording?.let {record->
-                // Si no hay título por artista
-                val recordingId = record.releases?.firstOrNull {release->
-                    release.title?.replace(regex," ")?.replace(" ","")?.lowercase() == trackTitle.lowercase().replace(" ","").trim()
+            if(recordings.isNotEmpty()){
+                releaseId = recordings[0].releases?.get(0)?.id
+                recordings.forEach { r->
+                    r.releases?.forEach { release->
+                        releaseIds.add(release.id.toString())
+                    }
                 }
-                releaseId = recordingId?.id
                 Log.e("FIND_ID_COVER", releaseId.toString())
-        /*    }
-        }
-*/
+                var result: HttpResponse? = null
         return when (val response = processResponse<CoverArtResponse> {
             (releaseId?.let {
-                coverArtClient.get("release/$releaseId")
+                while (releaseIds.isNotEmpty()) {
+                    val resp = coverArtClient.get("release/${releaseIds.first()}")
+                    if (resp.status.isSuccess()) {
+                        result = resp
+                        break
+                    } else {
+                        releaseIds.removeFirst()
+                    }
+                }
+                result ?:MbResponse.Error(ErrorResponse(-1, "No valid cover art found"))
             }?:{
-                null
+                MbResponse.Error(ErrorResponse(errorCode = -1, message = "Not Found covers"))
             }) as HttpResponse
 
         }) {
-            is MbResponse.Error -> response
-
+            is MbResponse.Error -> {
+                response
+            }
             is MbResponse.Success -> {
                 val images = response.response.images
                 val coverArt = CoverArtUrls()
@@ -185,13 +210,12 @@ class MusicBrainzService(private val appName:String?=null,
                         images.firstOrNull { it.back }?.getThumbnail(size)
                     else -> null
                 }
-
                 return MbResponse.Success(coverArt)
             }
         }
             }
         }
-        return MbResponse.Error(ErrorResponse(-1,"Error"))
+        return MbResponse.Error(ErrorResponse(-1,"Title or artist not is a correct"))
     }
 
     // Specific search function for recordings
