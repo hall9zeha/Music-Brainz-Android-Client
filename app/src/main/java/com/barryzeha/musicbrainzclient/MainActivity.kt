@@ -143,10 +143,12 @@ class MainActivity : AppCompatActivity() {
         }*/
         // FetchCovert art by track name
 
-        mbService.fetchCoverArtByTitleAndArtist("Like a virgin","Madonna", side= COVER_ART_BOTH_SIDES,size = 500) {
+        mbService.fetchCoverArtByTitleAndArtist("¿Sabes?","Álex ubago", side= COVER_ART_BOTH_SIDES,size = 500) {
             it.onSuccess { coverArtResponse ->
-                Log.d("RESPONSE_MUZIC_COVER_BY_NAME", "${coverArtResponse.front}")
-                Log.d("RESPONSE_MUZIC_COVER_BY_NAME", "${coverArtResponse.back}")
+                coverArtResponse.forEach { coverArtUrl->
+                    Log.d("RESPONSE_MUZIC_COVER_BY_NAME", "${coverArtUrl.front}")
+                    //Log.d("RESPONSE_MUZIC_COVER_BY_NAME", "${coverArtResponse.back}")
+                }
             }
             it.onError { error ->
                 Log.e("RESPONSE_MUZIC_COVER_BY_NAME", "Error ${error.errorCode}: ${error.message}")

@@ -31,5 +31,5 @@ interface MbRepository {
     suspend fun fetchCoverArt(mbId: String): MbResponse<CoverArtResponse>
     suspend fun fetchCoverArtThumbnails(mbId:String): MbResponse<List<Thumbnails>>
     suspend fun fetchCovertArt(mbId: String, side:Int, size:Int):MbResponse<CoverArtUrls>
-    suspend fun fetchCoverArtByTitleAndArtist(title: String,artist:String, side:Int, size:Int):MbResponse<CoverArtUrls>
+    suspend fun fetchCoverArtByTitleAndArtist(title: String,artist:String, side:Int, size:Int, firstOnly:Boolean):MbResponse<List<CoverArtUrls>>
 }

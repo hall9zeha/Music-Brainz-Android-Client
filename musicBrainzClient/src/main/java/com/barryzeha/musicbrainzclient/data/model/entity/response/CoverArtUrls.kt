@@ -1,5 +1,7 @@
 package com.barryzeha.musicbrainzclient.data.model.entity.response
 
+import kotlinx.serialization.Serializable
+
 
 /****
  * Project MusicBrainz
@@ -7,7 +9,7 @@ package com.barryzeha.musicbrainzclient.data.model.entity.response
  * Copyright (c)  All rights reserved.
  ***/
 
-
+@Serializable
 class CoverArtUrls {
     var front:String?=null
     var back:String?=null

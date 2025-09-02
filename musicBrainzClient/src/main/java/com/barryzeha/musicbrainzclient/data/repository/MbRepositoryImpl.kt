@@ -75,8 +75,9 @@ class MbRepositoryImpl(private val appName:String?=null,private val appVersion:S
         title: String,
         artist:String,
         side: Int,
-        size: Int
-    ): MbResponse<CoverArtUrls> {
-        return musicBrainzService.fetchCoverArtByTitleAndArtist(title,artist,side,size)
+        size: Int,
+        firstOnly: Boolean
+    ): MbResponse<List<CoverArtUrls>> {
+        return musicBrainzService.fetchCoverArtByTitleAndArtist(title,artist,side,size,firstOnly)
     }
 }

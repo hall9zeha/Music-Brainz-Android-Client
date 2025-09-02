@@ -12,6 +12,7 @@ import com.barryzeha.musicbrainzclient.common.SearchField
 import com.barryzeha.musicbrainzclient.common.allTrim
 import com.barryzeha.musicbrainzclient.common.getThumbnail
 import com.barryzeha.musicbrainzclient.common.processResponse
+import com.barryzeha.musicbrainzclient.common.processResponses
 import com.barryzeha.musicbrainzclient.common.utils.GenericQueryBuilder
 import com.barryzeha.musicbrainzclient.data.model.entity.coverentity.Thumbnails
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Release
@@ -130,11 +131,11 @@ class MusicBrainzService(private val appName:String?=null,
     // Specific search function for cover art whit name of track
     // only get first match
     //TODO optimizar
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
-    suspend fun fetchCoverArtByTitleAndArtist(title:String, artist:String, side:Int, size:Int):MbResponse<CoverArtUrls>{
+    suspend fun fetchCoverArtByTitleAndArtist(title:String, artist:String, side:Int, size:Int, firstOnly:Boolean=true):MbResponse<List<CoverArtUrls>>{
         var releaseId:String?=null
-        val regex = Regex("[()]")
         var releaseIds: MutableList<String> = mutableListOf()
+        var coverArtUrls: MutableList<CoverArtUrls> = mutableListOf()
+        var responses:MutableList<HttpResponse> = mutableListOf()
         val queryWithName = GenericQueryBuilder()
             .field(SearchField.RECORDING,title)
             .field(SearchField.ARTIST,artist)
@@ -148,18 +149,23 @@ class MusicBrainzService(private val appName:String?=null,
             }
         }
         if(recordingResponse.status.isSuccess()){
+            // Filter the list of recordings that contain the song title field in order to later
+            // filter the child objects of each recording
             val recordings = recordingResponse.body<RecordingResponse>().recordings.filter{recording->
-                Log.e("FIND_ID_COVER", "${recording.title.allTrim().lowercase()} == ${title.lowercase().allTrim()}")
+
+                //
                 val release = recording.releases?.firstOrNull {release->
-                    //primero comprobamos que el artista sea el que estamos buscando
+                    // First, check that the artist matches the one we are searching for
                     val artistCredit = release.artistCredit?.firstOrNull {artistCredit->artistCredit.name.lowercase().allTrim()==artist.lowercase().allTrim()  }
-                    Log.e("FIND_ID_COVER", (artistCredit!=null).toString())
-                    Log.e("FIND_ID_COVER", "${release.title?.allTrim()?.lowercase() }== ${title.allTrim().lowercase()}")
+
+                    // Check if the media object inside the release has the field "Digital Media"
+                    // because if it does, it's more likely that the related release will also have cover art available
                     val media = release.media?.firstOrNull { media->
                         media.format?.trim()?.lowercase() == "Digital Media".trim().lowercase()
                     }
-                    //if(artistCredit!=null) release.media?.allTrim()?.lowercase() == title.allTrim().lowercase()
-                    if(media!=null) true
+                    // If it's not null, return true so we keep the current object
+                    if(artistCredit !=null && media!=null) true
+                    // Otherwise, continue filtering until the condition is met or the list ends
                     else false
                 }
 
@@ -174,43 +180,50 @@ class MusicBrainzService(private val appName:String?=null,
                         releaseIds.add(release.id.toString())
                     }
                 }
-                Log.e("FIND_ID_COVER", releaseId.toString())
-                var result: HttpResponse? = null
-        return when (val response = processResponse<CoverArtResponse> {
+
+        return when (val response = processResponses<CoverArtResponse> {
             (releaseId?.let {
                 while (releaseIds.isNotEmpty()) {
-                    val resp = coverArtClient.get("release/${releaseIds.first()}")
+                    val resp = coverArtClient.get("release/${releaseIds[0]}")
                     if (resp.status.isSuccess()) {
-                        result = resp
-                        break
+                        responses?.add(resp)
+                        //result = resp
+                        releaseIds.removeAt(0)
+                        if(firstOnly) break
                     } else {
-                        releaseIds.removeFirst()
+                        releaseIds.removeAt(0)
                     }
                 }
-                result ?:MbResponse.Error(ErrorResponse(-1, "No valid cover art found"))
+                responses ?:MbResponse.Error(ErrorResponse(-1, "No valid cover art found"))
+                //result ?:MbResponse.Error(ErrorResponse(-1, "No valid cover art found"))
             }?:{
                 MbResponse.Error(ErrorResponse(errorCode = -1, message = "Not Found covers"))
-            }) as HttpResponse
+            }) as List<HttpResponse>
 
         }) {
             is MbResponse.Error -> {
                 response
             }
             is MbResponse.Success -> {
-                val images = response.response.images
-                val coverArt = CoverArtUrls()
+                response.response.forEach{resp->
+                    val images = resp.images
+                    val coverArt = CoverArtUrls()
+                    coverArt.front = when (side) {
+                        COVER_ART_FRONT, COVER_ART_BOTH_SIDES ->
+                            images.firstOrNull { it.front }?.getThumbnail(size)
 
-                coverArt.front = when (side) {
-                    COVER_ART_FRONT, COVER_ART_BOTH_SIDES ->
-                        images.firstOrNull { it.front }?.getThumbnail(size)
-                    else -> null
+                        else -> null
+                    }
+                    coverArt.back = when (side) {
+                        COVER_ART_BACK, COVER_ART_BOTH_SIDES ->
+                            images.firstOrNull { it.back }?.getThumbnail(size)
+
+                        else -> null
+                    }
+                    coverArtUrls.add(coverArt)
+                    Log.e("RESPONSE_COVER_ART", coverArtUrls.size.toString())
                 }
-                coverArt.back = when (side) {
-                    COVER_ART_BACK, COVER_ART_BOTH_SIDES ->
-                        images.firstOrNull { it.back }?.getThumbnail(size)
-                    else -> null
-                }
-                return MbResponse.Success(coverArt)
+                return MbResponse.Success(coverArtUrls)
             }
         }
             }

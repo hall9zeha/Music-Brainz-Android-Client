@@ -38,6 +38,32 @@ suspend inline fun <reified T> processResponse(block:suspend()-> HttpResponse): 
    }
 
 }
+suspend inline fun <reified T> processResponses(block:suspend()-> List<HttpResponse>): MbResponse<List<T>>{
+    var responsesProcessed : MutableList<T> = mutableListOf()
+    return try{
+        val responses = block()
+        responsesProcessed = responses
+            .filter{it.status.isSuccess()}
+            .map{it.body<T>()}
+            .toMutableList()
+        if (responsesProcessed.isEmpty()) {
+           return  MbResponse.Error(ErrorResponse(-1, "No valid responses"))
+        } else {
+            MbResponse.Success(responsesProcessed)
+        }
+
+       return MbResponse.Success(responsesProcessed)
+    }catch(e:Exception){
+        MbResponse.Error(
+            ErrorResponse(
+                errorCode = -1,
+                message = e.message ?: "Unknown error",
+                cause = e
+            )
+        )
+    }
+
+}
 
 inline fun <T> MbResponse<T>.onSuccess(action:(T)->Unit): MbResponse<T>{
     if(this is MbResponse.Success) action(response)
