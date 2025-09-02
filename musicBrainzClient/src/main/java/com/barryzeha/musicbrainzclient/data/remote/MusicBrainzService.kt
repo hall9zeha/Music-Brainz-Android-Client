@@ -221,7 +221,6 @@ class MusicBrainzService(private val appName:String?=null,
                         else -> null
                     }
                     coverArtUrls.add(coverArt)
-                    Log.e("RESPONSE_COVER_ART", coverArtUrls.size.toString())
                 }
                 return MbResponse.Success(coverArtUrls)
             }
