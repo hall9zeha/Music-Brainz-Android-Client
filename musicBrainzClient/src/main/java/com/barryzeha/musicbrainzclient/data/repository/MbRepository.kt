@@ -1,5 +1,6 @@
 package com.barryzeha.musicbrainzclient.data.repository
 
+import com.barryzeha.musicbrainzclient.common.LookupEntity
 import com.barryzeha.musicbrainzclient.common.SearchEntity
 import com.barryzeha.musicbrainzclient.data.model.entity.coverentity.Thumbnails
 import com.barryzeha.musicbrainzclient.data.model.entity.response.CoverArtResponse
@@ -7,6 +8,7 @@ import com.barryzeha.musicbrainzclient.data.model.entity.response.CoverArtUrls
 import com.barryzeha.musicbrainzclient.data.model.entity.response.MbResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.RecordingResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.ReleaseResponse
+import kotlin.reflect.KClass
 
 /****
  * Project MusicBrainz
@@ -15,19 +17,20 @@ import com.barryzeha.musicbrainzclient.data.model.entity.response.ReleaseRespons
  ***/
 
 interface MbRepository {
-    suspend fun searchRecording(
+    suspend fun  searchRecording(
         query: String,
         limit: Int,
         offset: Int
     ): MbResponse<RecordingResponse>
     suspend fun searchReleaseById(id: String): MbResponse<ReleaseResponse>
-    suspend  fun <T> searchEntity(
+    suspend  fun <T:Any> searchEntity(
         entity: SearchEntity,
         query: String,
         limit: Int,
-        offset: Int
+        offset: Int,
+        clazz:KClass<T>
     ): MbResponse<T>
-
+    suspend  fun<T: Any> lookupEntity(entity: LookupEntity,mbId: String,inc: String?=null,clazz: KClass<T>): MbResponse<T>
     suspend fun fetchCoverArt(mbId: String): MbResponse<CoverArtResponse>
     suspend fun fetchCoverArtThumbnails(mbId:String): MbResponse<List<Thumbnails>>
     suspend fun fetchCovertArt(mbId: String, side:Int, size:Int):MbResponse<CoverArtUrls>

@@ -1,8 +1,5 @@
 package com.barryzeha.musicbrainzclient.data.remote
 
-import android.os.Build
-import android.util.Log
-import androidx.annotation.RequiresApi
 import com.barryzeha.musicbrainzclient.common.COVER_ART_BACK
 import com.barryzeha.musicbrainzclient.common.COVER_ART_BOTH_SIDES
 import com.barryzeha.musicbrainzclient.common.COVER_ART_FRONT
@@ -23,10 +20,12 @@ import com.barryzeha.musicbrainzclient.data.model.entity.response.ErrorResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.MbResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.RecordingResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.ReleaseResponse
+import com.barryzeha.musicbrainzclient.data.repository.MbRepository
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.isSuccess
+import kotlin.reflect.KClass
 
 /****
  * Project MusicBrainz
@@ -36,20 +35,21 @@ import io.ktor.http.isSuccess
 
 class MusicBrainzService(private val appName:String?=null,
                          private val appVersion:String?=null,
-                         private val contact:String?=null ) {
+                         private val contact:String?=null ){
 
         val client by lazy { HttpClientProvider.create(appName,appVersion,contact) }
         val coverArtClient by lazy { HttpClientProvider.createCoverArtClient() }
 
     // Generic search function for different entities
-    suspend inline fun <reified T>searchEntity(
+    suspend fun <T: Any>searchEntity(
         entity: SearchEntity,
         query: String,
         limit: Int = 50,
-        offset: Int = 0
+        offset: Int = 0,
+        clazz: KClass<T>
     ): MbResponse<T> {
-        return processResponse {
-            client.get(entity.path){
+        return processResponse(clazz) {
+            client.get(entity.path) {
                 url {
                     parameters.append("query", query)
                     parameters.append("limit", limit.toString())
@@ -60,13 +60,14 @@ class MusicBrainzService(private val appName:String?=null,
 
     }
     // Generic lookup function for different entities
-    suspend  inline fun<reified T> lookupEntity(
+   suspend  fun<T: Any> lookupEntity(
         entity: LookupEntity,
         mbId: String,
-        inc: String?=null
+        inc: String?=null,
+        clazz: KClass<T>
     ): MbResponse<T> {
-        return processResponse {
-            client.get("${entity.path}/$mbId"){
+        return processResponse(clazz) {
+            client.get("${entity.path}/$mbId") {
                 url {
                     inc?.let {
                         parameters.append("inc", it)
@@ -80,13 +81,13 @@ class MusicBrainzService(private val appName:String?=null,
 
     // Specific fetches function for cover art archive
     suspend fun fetchCoverArt(mbId: String): MbResponse<CoverArtResponse>{
-        return processResponse {
+        return processResponse(CoverArtResponse::class) {
             coverArtClient.get("release/$mbId")
         }
     }
     // Specific request to get only thumbnails url fo cover art
     suspend fun fetchCoverArtThumbnails(mbId:String): MbResponse<List<Thumbnails>>{
-        val response = processResponse<CoverArtResponse> {
+        val response = processResponse(CoverArtResponse::class) {
             coverArtClient.get("release/$mbId")
         }
         val thumbnails =  mutableListOf<Thumbnails>()
@@ -103,8 +104,8 @@ class MusicBrainzService(private val appName:String?=null,
         return MbResponse.Success(thumbnails)
     }
     // Specific request to get covert art front or back
-    suspend fun fetchCoverArt(mbId:String, side:Int, size:Int):MbResponse<CoverArtUrls>{
-        return when (val response = processResponse<CoverArtResponse> {
+    suspend fun  fetchCoverArt(mbId:String, side:Int, size:Int):MbResponse<CoverArtUrls>{
+        return when (val response = processResponse(CoverArtResponse::class) {
             coverArtClient.get("release/$mbId")
         }) {
             is MbResponse.Error -> response
@@ -129,8 +130,7 @@ class MusicBrainzService(private val appName:String?=null,
         }
     }
     // Specific search function for cover art whit name of track
-    // only get first match
-    //TODO optimizar
+    // only get first match for default
     suspend fun fetchCoverArtByTitleAndArtist(title:String, artist:String, side:Int, size:Int, firstOnly:Boolean=true):MbResponse<List<CoverArtUrls>>{
         var releaseId:String?=null
         var releaseIds: MutableList<String> = mutableListOf()
@@ -235,8 +235,8 @@ class MusicBrainzService(private val appName:String?=null,
             query: String,
             limit: Int = 50,
             offset: Int = 0): MbResponse<RecordingResponse> {
-            return processResponse {
-                client.get("recording"){
+            return processResponse(RecordingResponse::class) {
+                client.get("recording") {
                     url {
                         parameters.append("query", query)
                         parameters.append("limit", limit.toString())
@@ -244,14 +244,14 @@ class MusicBrainzService(private val appName:String?=null,
                     }
                 }
             }
-        }
+    }
     // Specific search function for artists
     suspend fun searchArtist(
         query: String,
         limit: Int = 50,
         offset: Int = 0): MbResponse<ArtistResponse> {
-        return processResponse {
-            client.get("artist"){
+        return processResponse(ArtistResponse::class) {
+            client.get("artist") {
                 url {
                     parameters.append("query", query)
                     parameters.append("limit", limit.toString())
@@ -267,8 +267,8 @@ class MusicBrainzService(private val appName:String?=null,
         limit: Int = 50,
         offset: Int = 0
     ): MbResponse<ReleaseResponse> {
-        return processResponse {
-            client.get("release"){
+        return processResponse(ReleaseResponse::class) {
+            client.get("release") {
                 url {
                     parameters.append("query", query)
                     parameters.append("limit", limit.toString())
@@ -282,8 +282,8 @@ class MusicBrainzService(private val appName:String?=null,
                                     limit: Int = 50,
                                     offset: Int = 0
     ): MbResponse<ReleaseResponse> {
-        return processResponse {
-            client.get("release-group"){
+        return processResponse(ReleaseResponse::class) {
+            client.get("release-group") {
                 url {
                     parameters.append("query", query)
                     parameters.append("limit", limit.toString())
@@ -293,10 +293,10 @@ class MusicBrainzService(private val appName:String?=null,
         }
     }
         suspend fun getReleaseById(query: String): MbResponse<ReleaseResponse> {
-            return processResponse {
-                client.get("release"){
-                    url{
-                        parameters.append("query",query)
+            return processResponse(ReleaseResponse::class) {
+                client.get("release") {
+                    url {
+                        parameters.append("query", query)
                     }
                 }
             }
@@ -304,7 +304,7 @@ class MusicBrainzService(private val appName:String?=null,
         }
 
     suspend fun lookupReleaseById(id: String): MbResponse<Release> {
-        return processResponse {
+        return processResponse(Release::class) {
             client.get("release/$id")
         }
 

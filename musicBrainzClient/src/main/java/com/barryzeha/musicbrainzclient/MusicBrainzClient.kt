@@ -9,6 +9,7 @@ import com.barryzeha.musicbrainzclient.data.model.entity.response.CoverArtUrls
 import com.barryzeha.musicbrainzclient.data.model.entity.response.MbResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.RecordingResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.ReleaseResponse
+import com.barryzeha.musicbrainzclient.data.repository.MbRepository
 import com.barryzeha.musicbrainzclient.data.repository.MbRepositoryImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,7 +33,7 @@ class MusicBrainzClient(private val appName:String?=null,private val appVersion:
     @PublishedApi
     internal val mainScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
     @PublishedApi
-    internal val repository: MbRepositoryImpl  by lazy { MbRepositoryImpl(appName,appVersion,contact) }
+    internal val repository: MbRepository  by lazy { MbRepositoryImpl(appName,appVersion,contact) }
 
     fun serchRecording(
         query: String,
@@ -53,7 +54,7 @@ class MusicBrainzClient(private val appName:String?=null,private val appVersion:
         crossinline callback:(MbResponse<T>)-> Unit
 
     ){ mainScope.launch {
-            val response= repository.genericSearchEntity<T>(entity, query, limit, offset)
+            val response= repository.searchEntity<T>(entity, query, limit, offset, T::class)
             callback(response)
         }
     }
@@ -64,7 +65,7 @@ class MusicBrainzClient(private val appName:String?=null,private val appVersion:
         crossinline callback:(MbResponse<T>)-> Unit
 
     ){ mainScope.launch {
-            val response= repository.genericLookupEntity<T>(entity, id, inc)
+            val response= repository.lookupEntity<T>(entity, id, inc,T::class)
             callback(response)
         }
     }

@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
         }*/
-       /* mbService.searchEntity<RecordingResponse>(
+        mbService.searchEntity<RecordingResponse>(
             SearchEntity.RECORDING,
             queryGeneric,
             1,
@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
                 it.cause?.printStackTrace()
 
             }
-        }*/
+        }
         // Lookup
        /* mbService.lookupEntity<RecordingLookupResponse>(
             LookupEntity.RECORDING,

@@ -9,6 +9,7 @@ import com.barryzeha.musicbrainzclient.data.model.entity.response.MbResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.RecordingResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.ReleaseResponse
 import com.barryzeha.musicbrainzclient.data.remote.MusicBrainzService
+import kotlin.reflect.KClass
 
 /****
  * Project MusicBrainz
@@ -21,8 +22,8 @@ class MbRepositoryImpl(private val appName:String?=null,private val appVersion:S
     override suspend fun searchRecording(
         query: String,
         limit: Int,
-        offset: Int
-    ): MbResponse<RecordingResponse> {
+        offset: Int,
+        ): MbResponse<RecordingResponse> {
         return musicBrainzService.searchRecording(query, limit, offset)
     }
 
@@ -31,28 +32,24 @@ class MbRepositoryImpl(private val appName:String?=null,private val appVersion:S
     }
 
 
-    override suspend  fun <T> searchEntity(
+
+    override suspend  fun <T:Any> searchEntity(
         entity: SearchEntity,
         query: String,
         limit: Int,
-        offset: Int
+        offset: Int,
+        clazz: KClass<T>
     ): MbResponse<T> {
-        return genericSearchEntity(entity,query,limit,offset)
+        return musicBrainzService.searchEntity(entity, query, limit, offset, clazz)
     }
-    suspend inline fun <reified T : Any> genericSearchEntity(
-        entity: SearchEntity,
-        query: String,
-        limit: Int = 50,
-        offset: Int = 0
-    ): MbResponse<T> {
-        return musicBrainzService.searchEntity(entity, query, limit, offset)
-    }
-    suspend inline fun<reified T:Any> genericLookupEntity(
+
+    override suspend  fun<T:Any> lookupEntity(
         entity: LookupEntity,
         id: String,
-        inc: String?
+        inc: String?,
+        clazz: KClass<T>
     ): MbResponse<T> {
-        return musicBrainzService.lookupEntity(entity, id, inc)
+        return musicBrainzService.lookupEntity(entity, id, inc, clazz)
     }
 
     override suspend fun fetchCoverArt(mbId: String): MbResponse<CoverArtResponse> {
@@ -63,7 +60,7 @@ class MbRepositoryImpl(private val appName:String?=null,private val appVersion:S
         return musicBrainzService.fetchCoverArtThumbnails(mbId)
     }
 
-    override suspend fun fetchCovertArt(
+    override  suspend  fun  fetchCovertArt(
         mbId: String,
         side: Int,
         size: Int

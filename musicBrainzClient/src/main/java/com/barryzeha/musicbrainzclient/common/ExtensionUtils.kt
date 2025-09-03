@@ -6,6 +6,8 @@ import com.barryzeha.musicbrainzclient.data.model.entity.response.MbResponse
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.isSuccess
+import io.ktor.util.reflect.TypeInfo
+import kotlin.reflect.KClass
 
 /****
  * Project MusicBrainz
@@ -13,11 +15,16 @@ import io.ktor.http.isSuccess
  * Copyright (c)  All rights reserved.
  ***/
 
-suspend inline fun <reified T> processResponse(block:suspend()-> HttpResponse): MbResponse<T>{
+
+suspend fun <T:Any> processResponse(clazz: KClass<T>, block: suspend () -> HttpResponse): MbResponse<T>{
    return try{
        val response = block()
        if (response.status.isSuccess()) {
-           val body = response.body<T>()
+           val typeInfo = TypeInfo(
+               type = clazz ,
+               reifiedType = clazz.java,
+               kotlinType = null)
+           val body = response.body(typeInfo) as T
            MbResponse.Success(body)
        } else {
            MbResponse.Error(
