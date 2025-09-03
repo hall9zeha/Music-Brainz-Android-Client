@@ -1,4 +1,4 @@
-package com.barryzeha.musicbrainzclient
+package com.barryzeha.musicbrainzandroidclient
 
 import android.os.Bundle
 import android.util.Log
@@ -6,6 +6,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.barryzeha.musicbrainzclient.MusicBrainzClient
+
 import com.barryzeha.musicbrainzclient.common.COVER_ART_BOTH_SIDES
 import com.barryzeha.musicbrainzclient.common.CoverSize
 import com.barryzeha.musicbrainzclient.common.SearchEntity
@@ -29,7 +31,8 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        val mbService = MusicBrainzClient(appName = "Test app", appVersion = "1.0.0", contact = "mail@mail.com")
+        val mbService =
+            MusicBrainzClient(appName = "Test app", appVersion = "1.0.0", contact = "mail@mail.com")
 
         val query = RecordingQueryBuilder()
             .title("I don't wanna go")

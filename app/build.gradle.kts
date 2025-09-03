@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.barryzeha.musicbrainzclient"
+    namespace = "com.barryzeha.musicbrainzandroidclient"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.barryzeha.musicbrainzclient"
+        applicationId = "com.barryzeha.musicbrainzandroidclient"
         minSdk = 24
         targetSdk = 35
         versionCode = 1

@@ -39,7 +39,7 @@ afterEvaluate {
             create<MavenPublication>("maven") {
                 from (components["release"])
                 groupId = "com.barryzeha.musicbrainzclient"
-                artifactId = "MusicBrainzAndroidClient"
+                artifactId = "musicBrainzClient"
                 version = "1.0.0"
             }
         }

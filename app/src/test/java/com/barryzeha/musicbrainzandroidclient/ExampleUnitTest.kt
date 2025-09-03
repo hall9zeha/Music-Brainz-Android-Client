@@ -1,4 +1,4 @@
-package com.barryzeha.musicbrainzclient
+package com.barryzeha.musicbrainzandroidclient
 
 import org.junit.Test
 
