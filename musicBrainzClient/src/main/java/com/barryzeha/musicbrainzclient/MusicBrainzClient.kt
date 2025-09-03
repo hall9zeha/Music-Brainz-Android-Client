@@ -1,6 +1,7 @@
 package com.barryzeha.musicbrainzclient
 
 import com.barryzeha.musicbrainzclient.common.COVER_ART_FRONT
+import com.barryzeha.musicbrainzclient.common.CoverSize
 import com.barryzeha.musicbrainzclient.common.LookupEntity
 import com.barryzeha.musicbrainzclient.common.SearchEntity
 import com.barryzeha.musicbrainzclient.data.model.entity.coverentity.Thumbnails
@@ -23,19 +24,23 @@ import kotlinx.coroutines.launch
  ***/
 
 /**
- * @param appName Nombre de la aplicación que utiliza la API de MusicBrainz. Recomendado para identificar tu app y aprovechar ventajas como mayor límite de peticiones.
- * @param appVersion Versión de la aplicación. Ayuda a MusicBrainz a gestionar el acceso y soporte.
- * @param contact Información de contacto (email o URL). Permite a MusicBrainz comunicarse contigo en caso de problemas o para soporte.
+ * @param appName Name of the application using the MusicBrainz API. Recommended to identify your app
+ *                and take advantage of benefits such as higher request limits.
+ * @param appVersion Version of the application. Helps MusicBrainz manage access and provide support.
+ * @param contact Contact information (email or URL). Allows MusicBrainz to reach you in case of issues
+ *                or for support purposes.
  *
- * Es recomendable proporcionar estos argumentos para usar la API de MusicBrainz con todas sus ventajas y evitar restricciones.
+ * It is recommended to provide these arguments in order to use the MusicBrainz API with all its benefits
+ * and to avoid restrictions.
  */
+
 class MusicBrainzClient(private val appName:String?=null,private val appVersion:String?=null, private val contact:String?=null) {
     @PublishedApi
     internal val mainScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
     @PublishedApi
     internal val repository: MbRepository  by lazy { MbRepositoryImpl(appName,appVersion,contact) }
 
-    fun serchRecording(
+    fun searchRecording(
         query: String,
         limit: Int,
         offset: Int,
@@ -46,6 +51,8 @@ class MusicBrainzClient(private val appName:String?=null,private val appVersion:
             callback(response)
         }
     }
+    // Generic requests for all entities with  search mode support
+    // Search mode not support include fields
     inline fun <reified T: Any> searchEntity(
         entity: SearchEntity,
         query: String,
@@ -58,14 +65,15 @@ class MusicBrainzClient(private val appName:String?=null,private val appVersion:
             callback(response)
         }
     }
+    // Generic lookup for all entities with  lookup mode support
     inline fun <reified T:Any> lookupEntity(
         entity:LookupEntity,
-        id: String,
+        mbId: String,
         inc: String?,
         crossinline callback:(MbResponse<T>)-> Unit
 
     ){ mainScope.launch {
-            val response= repository.lookupEntity<T>(entity, id, inc,T::class)
+            val response= repository.lookupEntity<T>(entity, mbId, inc,T::class)
             callback(response)
         }
     }
@@ -90,7 +98,7 @@ class MusicBrainzClient(private val appName:String?=null,private val appVersion:
     fun fetchCoverArtSide(
         mbId:String,
         side:Int= COVER_ART_FRONT,
-        size:Int=250,
+        size: CoverSize= CoverSize.S_250,
         callback:(MbResponse<CoverArtUrls>)->Unit
     ){
         mainScope.launch {
@@ -98,11 +106,39 @@ class MusicBrainzClient(private val appName:String?=null,private val appVersion:
             callback(response)
         }
     }
+
+    /**
+     * Fetches cover art images by matching a release title and artist name.
+     *
+     * By default, only the **front** cover art of the first matching release is returned
+     * at a size of **250px**. The behavior can be customized with the parameters:
+     *
+     * - `side`: Defines which side(s) of the cover art to fetch.
+     *   Options are:
+     *   - [COVER_ART_FRONT] = 1 → front cover (default)
+     *   - [COVER_ART_BACK] = 2 → back cover
+     *   - [COVER_ART_BOTH_SIDES] = 3 → both front and back
+     *
+     * - `size`: Size of the cover art image.
+     *   Supported values: **250 (default)**, 500, 1200, `small`, `large`.
+     *
+     * - `firstOnly`: If `true` (default), only the first matching cover art is returned.
+     *   If `false`, all matching images for the given title and artist are returned, but the
+     *   request will be slower.
+     *
+     * @param title Release title used for the search.
+     * @param artist Artist name used for the search.
+     * @param side Which cover art side(s) to fetch (front, back, or both). Defaults to [COVER_ART_FRONT].
+     * @param size Size of the cover art image. Defaults to 250px.
+     * @param firstOnly If `true`, returns only the first matching cover art (faster). Defaults to `true`.
+     * @param callback Function to handle the response, which contains either a list of [CoverArtUrls]
+     *                 or an error wrapped in [MbResponse].
+     */
     fun fetchCoverArtByTitleAndArtist(
         title:String,
         artist:String,
         side:Int= COVER_ART_FRONT,
-        size:Int=250,
+        size: CoverSize= CoverSize.S_250,
         firstOnly:Boolean = true,
         callback:(MbResponse<List<CoverArtUrls>>)->Unit
     ){

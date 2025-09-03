@@ -1,0 +1,11 @@
+project:
+  name: MusicBrainzAndroidClient
+jdk:
+  - openjdk21
+
+build:
+  gradle: 8.11.1
+
+notifications:
+  on_success: always
+  on_failure: always

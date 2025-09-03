@@ -1,5 +1,6 @@
 package com.barryzeha.musicbrainzclient.data.repository
 
+import com.barryzeha.musicbrainzclient.common.CoverSize
 import com.barryzeha.musicbrainzclient.common.LookupEntity
 import com.barryzeha.musicbrainzclient.common.SearchEntity
 import com.barryzeha.musicbrainzclient.data.model.entity.coverentity.Thumbnails
@@ -72,7 +73,7 @@ class MbRepositoryImpl(private val appName:String?=null,private val appVersion:S
         title: String,
         artist:String,
         side: Int,
-        size: Int,
+        size: CoverSize,
         firstOnly: Boolean
     ): MbResponse<List<CoverArtUrls>> {
         return musicBrainzService.fetchCoverArtByTitleAndArtist(title,artist,side,size,firstOnly)

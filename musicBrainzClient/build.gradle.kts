@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlinxSerialization)
+    id("maven-publish")
 }
 
 android {
@@ -32,7 +33,18 @@ android {
         jvmTarget = "21"
     }
 }
-
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("maven") {
+                from (components["release"])
+                groupId = "com.barryzeha.musicbrainzclient"
+                artifactId = "MusicBrainzAndroidClient"
+                version = "1.0.0"
+            }
+        }
+    }
+}
 dependencies {
 
     implementation(libs.androidx.core.ktx)

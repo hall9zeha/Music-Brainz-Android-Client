@@ -8,6 +8,23 @@ import com.barryzeha.musicbrainzclient.common.IncludeField
  * Copyright (c)  All rights reserved.
  ***/
 
+/**
+ * Builder class for constructing the `inc` parameter for MusicBrainz lookups.
+ *
+ * This class provides convenience methods for including specific fields in the query.
+ * Internally, it accumulates the selected fields and joins them with `+` as required
+ * by the MusicBrainz WS/2 API.
+ *
+ * Example usage:
+ * ```
+ * val inc = GenericIncludeBuilder()
+ *     .incAliases()
+ *     .incTags()
+ *     .incRecordings()
+ *     .build()
+ * // Produces: aliases+tags+recordings
+ * ```
+ */
 class GenericIncludeBuilder{
 
     private val parts = mutableListOf<String>()

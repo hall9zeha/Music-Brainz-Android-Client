@@ -3,6 +3,7 @@ package com.barryzeha.musicbrainzclient.data.remote
 import com.barryzeha.musicbrainzclient.common.COVER_ART_BACK
 import com.barryzeha.musicbrainzclient.common.COVER_ART_BOTH_SIDES
 import com.barryzeha.musicbrainzclient.common.COVER_ART_FRONT
+import com.barryzeha.musicbrainzclient.common.CoverSize
 import com.barryzeha.musicbrainzclient.common.LookupEntity
 import com.barryzeha.musicbrainzclient.common.SearchEntity
 import com.barryzeha.musicbrainzclient.common.SearchField
@@ -104,7 +105,7 @@ class MusicBrainzService(private val appName:String?=null,
         return MbResponse.Success(thumbnails)
     }
     // Specific request to get covert art front or back
-    suspend fun  fetchCoverArt(mbId:String, side:Int, size:Int):MbResponse<CoverArtUrls>{
+    suspend fun  fetchCoverArt(mbId:String, side:Int, size: CoverSize):MbResponse<CoverArtUrls>{
         return when (val response = processResponse(CoverArtResponse::class) {
             coverArtClient.get("release/$mbId")
         }) {
@@ -116,12 +117,12 @@ class MusicBrainzService(private val appName:String?=null,
 
                     coverArt.front = when (side) {
                         COVER_ART_FRONT, COVER_ART_BOTH_SIDES ->
-                           images.firstOrNull { it.front }?.getThumbnail(size)
+                           images.firstOrNull { it.front }?.getThumbnail(size.value)
                         else -> null
                     }
                     coverArt.back = when (side) {
                         COVER_ART_BACK, COVER_ART_BOTH_SIDES ->
-                            images.firstOrNull { it.back }?.getThumbnail(size)
+                            images.firstOrNull { it.back }?.getThumbnail(size.value)
                         else -> null
                     }
 
@@ -131,7 +132,7 @@ class MusicBrainzService(private val appName:String?=null,
     }
     // Specific search function for cover art whit name of track
     // only get first match for default
-    suspend fun fetchCoverArtByTitleAndArtist(title:String, artist:String, side:Int, size:Int, firstOnly:Boolean=true):MbResponse<List<CoverArtUrls>>{
+    suspend fun fetchCoverArtByTitleAndArtist(title:String, artist:String, side:Int, size: CoverSize, firstOnly:Boolean=true):MbResponse<List<CoverArtUrls>>{
         var releaseId:String?=null
         var releaseIds: MutableList<String> = mutableListOf()
         var coverArtUrls: MutableList<CoverArtUrls> = mutableListOf()
@@ -210,13 +211,13 @@ class MusicBrainzService(private val appName:String?=null,
                     val coverArt = CoverArtUrls()
                     coverArt.front = when (side) {
                         COVER_ART_FRONT, COVER_ART_BOTH_SIDES ->
-                            images.firstOrNull { it.front }?.getThumbnail(size)
+                            images.firstOrNull { it.front }?.getThumbnail(size.value)
 
                         else -> null
                     }
                     coverArt.back = when (side) {
                         COVER_ART_BACK, COVER_ART_BOTH_SIDES ->
-                            images.firstOrNull { it.back }?.getThumbnail(size)
+                            images.firstOrNull { it.back }?.getThumbnail(size.value)
 
                         else -> null
                     }

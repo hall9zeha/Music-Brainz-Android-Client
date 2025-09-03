@@ -16,6 +16,7 @@ import kotlin.reflect.KClass
  ***/
 
 
+@Suppress("DEPRECATION")
 suspend fun <T:Any> processResponse(clazz: KClass<T>, block: suspend () -> HttpResponse): MbResponse<T>{
    return try{
        val response = block()
@@ -81,11 +82,13 @@ inline fun <T> MbResponse<T>.onError(action:(ErrorResponse)->Unit): MbResponse<T
     if(this is MbResponse.Error) action(error)
     return this
 }
-fun CoverImage.getThumbnail(size: Int): String? =
+fun CoverImage.getThumbnail(size: String): String? =
     when (size) {
-        1200 -> thumbnails.size1200
-        500 -> thumbnails.size500
-        250 -> thumbnails.size250
+        "1200" -> thumbnails.size1200
+        "500" -> thumbnails.size500
+        "250" -> thumbnails.size250
+        "small"->thumbnails.small
+        "large"->thumbnails.large
         else -> null
     }
 fun String.allTrim():String{

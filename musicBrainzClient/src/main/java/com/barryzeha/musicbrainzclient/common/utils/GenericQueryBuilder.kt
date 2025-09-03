@@ -8,6 +8,21 @@ import com.barryzeha.musicbrainzclient.common.QueryField
  * Copyright (c)  All rights reserved.
  ***/
 
+/**
+ * Builder class for constructing search queries for MusicBrainz endpoints.
+ *
+ * This class allows you to progressively add fields and values that will be joined
+ * using the `AND` operator. Values are automatically quoted and escaped.
+ *
+ * Example usage:
+ * ```
+ * val query = GenericQueryBuilder()
+ *     .field(SearchField.ARTIST, "Daft Punk")
+ *     .field(SearchField.RELEASE, "Discovery")
+ *     .build()
+ * // Produces: artist:"Daft Punk" AND release:"Discovery"
+ * ```
+ */
 class GenericQueryBuilder {
     private val parts = mutableListOf<String>()
     fun field(field: QueryField, value: String) = apply {

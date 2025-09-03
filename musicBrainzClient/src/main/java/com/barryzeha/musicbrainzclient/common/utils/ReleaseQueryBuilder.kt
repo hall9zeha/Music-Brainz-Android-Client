@@ -6,6 +6,9 @@ package com.barryzeha.musicbrainzclient.common.utils
  * Copyright (c)  All rights reserved.
  ***/
 
+/*
+* Generic class
+* */
 class ReleaseQueryBuilder {
     private val parts = mutableListOf<String>()
 

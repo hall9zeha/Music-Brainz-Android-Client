@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.barryzeha.musicbrainzclient.common.COVER_ART_BOTH_SIDES
+import com.barryzeha.musicbrainzclient.common.CoverSize
 import com.barryzeha.musicbrainzclient.common.SearchEntity
 import com.barryzeha.musicbrainzclient.common.SearchField
 import com.barryzeha.musicbrainzclient.common.onError
@@ -143,7 +144,7 @@ class MainActivity : AppCompatActivity() {
         }*/
         // FetchCovert art by track name
 
-        mbService.fetchCoverArtByTitleAndArtist("¿Sabes?","Álex ubago", side= COVER_ART_BOTH_SIDES,size = 500) {
+        mbService.fetchCoverArtByTitleAndArtist("¿Sabes?","Álex ubago", side= COVER_ART_BOTH_SIDES,size = CoverSize.S_500) {
             it.onSuccess { coverArtResponse ->
                 coverArtResponse.forEach { coverArtUrl->
                     Log.d("RESPONSE_MUZIC_COVER_BY_NAME", "${coverArtUrl.front}")
