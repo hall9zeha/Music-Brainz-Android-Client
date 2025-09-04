@@ -33,21 +33,24 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
         val mbService = MusicBrainzClient(
                 appName = "Test app",
                 appVersion = "1.0.0",
                 contact = "mail@mail.com")
-
+        // Specific query by Recording from Search
         val recordingQuery = RecordingQueryBuilder()
             .title("I don't wanna go")
             .artist("Kidburn")
             .build()
 
+        // Generic query builder for Search
         val genericQuery = GenericQueryBuilder()
             .field(SearchField.RECORDING,"I Don't Wanna Go")
             .field(SearchField.ARTIST,"Kidburn")
             .build()
 
+        // Specific query by Release from Search
         val releaseQuery= ReleaseQueryBuilder()
             .releaseId("4ad149df-86f9-47c5-96f3-8db9ffd66da4")
             .build()
@@ -55,11 +58,13 @@ class MainActivity : AppCompatActivity() {
         // Generic builder From relations
         val includeFields = GenericIncludeBuilder()
             .incArtistCredits()
+            .incIsrcs()
+            .incAliases()
             .build()
 
 
         mbService.searchRecording(
-            recordingQuery,
+            query = recordingQuery,
             limit=1,
             offset = 0
         ) { response ->
@@ -74,9 +79,9 @@ class MainActivity : AppCompatActivity() {
                 }
 
         }
-        mbService.searchEntity<RecordingResponse>(
-            SearchEntity.RECORDING,
-            genericQuery,
+       /* mbService.searchEntity<RecordingResponse>(
+            entity = SearchEntity.RECORDING,
+            query= genericQuery,
             limit=1,
             offset = 0
         ) { response ->
@@ -88,12 +93,12 @@ class MainActivity : AppCompatActivity() {
                 it.cause?.printStackTrace()
 
             }
-        }
+        }*/
         // Lookup
-        mbService.lookupEntity<RecordingLookupResponse>(
-            LookupEntity.RECORDING,
-            "b9ad642e-b012-41c7-b72a-42cf4911f9ff",
-            null
+        /*mbService.lookupEntity<RecordingLookupResponse>(
+            entity = LookupEntity.RECORDING,
+            mbId = "b9ad642e-b012-41c7-b72a-42cf4911f9ff",
+            inc = null //Si no se quiere obtener las relaciones, se puede pasar null
 
         ) { response ->
             response.onSuccess {
@@ -106,9 +111,9 @@ class MainActivity : AppCompatActivity() {
                 it.cause?.printStackTrace()
 
             }
-        }
+        }*/
 
-        mbService.getReleaseById(releaseQuery) {
+        /*mbService.getReleaseById(releaseQuery) {
             it.onSuccess {
                 Log.d("RESPONSE_MUZIC_RELEASE", "Éxito: $it")
             }
@@ -117,9 +122,9 @@ class MainActivity : AppCompatActivity() {
                 it.cause?.printStackTrace()
 
             }
-        }
+        }*/
         // Cover Art by MBId: return a complete object same the api documentation
-        mbService.fetchCoverArt(mbId = "99b09d02-9cc9-3fed-8431-f162165a9371") {
+        /*mbService.fetchCoverArt(mbId = "99b09d02-9cc9-3fed-8431-f162165a9371") {
             it.onSuccess { coverArtResponse ->
                 Log.d("RESPONSE_MUZIC_COVER_ART", "Éxito: $coverArtResponse")
 
@@ -128,9 +133,9 @@ class MainActivity : AppCompatActivity() {
                 Log.e("RESPONSE_MUZIC_COVER_ART", "Error ${error.errorCode}: ${error.message}")
                 error.cause?.printStackTrace()
             }
-        }
+        }*/
         // CovertArt thumbnails: return a object with only the image urls link to MBId
-        mbService.fetchCoverArtThumbnail(mbId = "99b09d02-9cc9-3fed-8431-f162165a9371") {
+        /*mbService.fetchCoverArtThumbnail(mbId = "99b09d02-9cc9-3fed-8431-f162165a9371") {
             it.onSuccess { coverArtResponse ->
                 Log.d("RESPONSE_MUZIC_COVER_THUMBNAIL", "Éxito: $coverArtResponse")
 
@@ -139,9 +144,13 @@ class MainActivity : AppCompatActivity() {
                 Log.e("RESPONSE_MUZIC_COVER_THUMBNAIL", "Error ${error.errorCode}: ${error.message}")
                 error.cause?.printStackTrace()
             }
-        }
+        }*/
         // CovertArt front or back: return only two urls of the cover images  if exists
-        mbService.fetchCoverArtSide(mbId = "99b09d02-9cc9-3fed-8431-f162165a9371", side= COVER_ART_BOTH_SIDES,size = CoverSize.S_500) {
+        /*mbService.fetchCoverArtSide(
+            mbId = "99b09d02-9cc9-3fed-8431-f162165a9371",
+            side= COVER_ART_BOTH_SIDES,
+            size = CoverSize.S_500)//Por defecto es CoverSize.S_250
+        {
             it.onSuccess { coverArtResponse ->
                 Log.d("RESPONSE_MUZIC_COVER_FRONT", "${coverArtResponse.front}")
                 Log.d("RESPONSE_MUZIC_COVER_BACK", "${coverArtResponse.back}")
@@ -152,13 +161,19 @@ class MainActivity : AppCompatActivity() {
                 error.cause?.printStackTrace()
             }
         }
-
+*/
         // Fetches cover art URLs by track title and artist name.
         // Both parameters are required to improve accuracy and reduce extra results.
         // If `onlyFirst` is enabled, returns the first matching cover art; otherwise,
         // returns all available URLs, which may take longer due to the more complex query.
         //
-        mbService.fetchCoverArtByTitleAndArtist("¿Sabes?","Álex ubago", side= COVER_ART_BOTH_SIDES,size = CoverSize.S_500) {
+        mbService.fetchCoverArtByTitleAndArtist(
+            title = "¿Sabes?",
+            artist = "Álex ubago",
+            side= COVER_ART_BOTH_SIDES,//Por defecto es COVER_ART_FRONT
+            size = CoverSize.S_500 //Por defecto es CoverSize.S_250
+
+        ) {
             it.onSuccess { coverArtResponse ->
                 coverArtResponse.forEach { coverArtUrl->
                     Log.d("RESPONSE_MUZIC_COVER_BY_NAME", "${coverArtUrl.front}")
@@ -174,7 +189,11 @@ class MainActivity : AppCompatActivity() {
 
 
         // Lookup with include field of relations
-        mbService.lookupEntity<RecordingLookupResponse>(LookupEntity.RECORDING,"b9ad642e-b012-41c7-b72a-42cf4911f9ff","artist-credits") {
+        mbService.lookupEntity<RecordingLookupResponse>(
+            entity = LookupEntity.RECORDING,
+            mbId = "b9ad642e-b012-41c7-b72a-42cf4911f9ff",
+            inc = includeFields
+        ) {
             it.onSuccess { recordingLookupResponse ->
                 Log.d("RESPONSE_MUZIC_LOOKUP_INC", "Éxito: $recordingLookupResponse")
 
