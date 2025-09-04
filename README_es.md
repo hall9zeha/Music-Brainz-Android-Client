@@ -1,5 +1,5 @@
 # MusicBrainz Android Client
-
+<a href="https://jitpack.io/#hall9zeha/Music-Brainz-Android-Client"><img alt="License" src="https://jitpack.io/v/hall9zeha/Music-Brainz-Android-Client.svg"/></a>
 [![Read in English](https://img.shields.io/badge/🌐-Read%20in%20English-blue)](README.md)
 
 Un cliente ligero para **Android** que simplifica el uso de la

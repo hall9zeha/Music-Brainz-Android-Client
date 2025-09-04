@@ -1,5 +1,6 @@
 # MusicBrainz Android Client
 
+<a href="https://jitpack.io/#hall9zeha/Music-Brainz-Android-Client"><img alt="License" src="https://jitpack.io/v/hall9zeha/Music-Brainz-Android-Client.svg"/></a>
 [![Leer en Español](https://img.shields.io/badge/🌐-Leer%20en%20Español-red)](README_es.md)
 
 A Kotlin library to interact with the [MusicBrainz
