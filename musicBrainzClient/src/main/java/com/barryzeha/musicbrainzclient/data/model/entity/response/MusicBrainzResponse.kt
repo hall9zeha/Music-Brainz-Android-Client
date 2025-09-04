@@ -12,6 +12,7 @@ import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Area
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Artist
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.ArtistCredit
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.CdStub
+import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Event
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Genre
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Instrument
 import com.barryzeha.musicbrainzclient.data.model.entity.mbentity.Label
@@ -53,7 +54,7 @@ data class CdStubsResponse(
     val cdstubs: List<CdStub> = emptyList()
 )
 @Serializable
-data class Event(
+data class EventResponse(
     val created: String,
     val count: Int = 0,
     val offset: Int = 0,
@@ -67,7 +68,7 @@ data class InstrumentResponse(
     val instruments: List<Instrument> = emptyList()
 )
 @Serializable
-data class Label(
+data class LabelResponse(
     val created: String,
     val count: Int = 0,
     val offset: Int = 0,
@@ -165,10 +166,7 @@ data class ArtistLookupResponse(
     val gender: String? = null,
     val country: String? = null,
     val disambiguation: String? = null,
-    val lifeSpan: LifeSpan? = null,
-    //val aliases: List<Alias> = emptyList(),
-    //val recordings: List<Recording> = emptyList(),
-    //val releaseGroups: List<ReleaseGroup> = emptyList()
+    val lifeSpan: LifeSpan? = null
 ): LookupIncludes()
 
 @Serializable
@@ -179,8 +177,7 @@ data class EventLookupResponse(
     val time: String? = null,
     val cancelled: Boolean? = null,
     val disambiguation: String? = null,
-    val lifeSpan: LifeSpan? = null,
-    //val relations: List<Relation> = emptyList()
+    val lifeSpan: LifeSpan? = null
 ): LookupIncludes()
 
 @Serializable

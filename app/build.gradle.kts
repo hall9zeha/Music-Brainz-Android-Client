@@ -44,7 +44,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation("com.github.hall9zeha:Music-Brainz-Android-Client:1.0.0")
-    //implementation(project(":musicBrainzClient"))
+    //implementation("com.github.hall9zeha:Music-Brainz-Android-Client:1.0.0")
+    implementation(project(":musicBrainzClient"))
     implementation(libs.koin.core)
 }
