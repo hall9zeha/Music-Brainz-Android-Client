@@ -17,7 +17,7 @@ Album cover art retrieval (Cover Art)
 ⚠️ The library is a work in progress and currently only includes support for
 search, lookups, relationships, and cover art.
 
-## Badge
+## Status
 
 ![Status](https://img.shields.io/badge/status-in%20progress-yellow)
 
@@ -241,20 +241,8 @@ mbService.fetchCoverArtByTitleAndArtist(
 
 ------------------------------------------------------------------------
 
-## Parámetros importantes
-
-  -----------------------------------------------------------------------
-  Parameter                        Description
-  -------------------------------- --------------------------------------
-  `limit`                          Number of results to return per query
-                                   (default: 25, max: 100).
-
-  `offset`                         Starting index for pagination (e.g.,
-                                   offset=25 skips the first 25 results).
-  -----------------------------------------------------------------------
-
-------------------------------------------------------------------------
-
 ## Licencia
 
 MIT License
+This project is not officially affiliated with
+[MetaBrainz](https://metabrainz.org/).
