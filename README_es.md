@@ -230,117 +230,98 @@ mbService.fetchCoverArtByTitleAndArtist(
 ------------------------------------------------------------------------
 
 ## Entidades Soportadas
-
 ### 🔎 SearchEntity (para búsquedas genéricas)
 
-  Enum            Path
-  --------------- -----------------
-  AREA            `area`
-  ARTIST          `artist`
-  EVENT           `event`
-  INSTRUMENT      `instrument`
-  LABEL           `label`
-  PLACE           `place`
-  RECORDING       `recording`
-  RELEASE         `release`
-  RELEASE_GROUP   `release-group`
-  SERIES          `series`
-  WORK            `work`
+| Enum          | Path           |
+|---------------|----------------|
+| AREA          | `area`         |
+| ARTIST        | `artist`       |
+| EVENT         | `event`        |
+| INSTRUMENT    | `instrument`   |
+| LABEL         | `label`        |
+| PLACE         | `place`        |
+| RECORDING     | `recording`    |
+| RELEASE       | `release`      |
+| RELEASE_GROUP | `release-group`|
+| SERIES        | `series`       |
+| WORK          | `work`         |
 
-------------------------------------------------------------------------
+---
 
 ### 🔍 LookupEntity (para consultas directas)
 
-  Enum            Path
-  --------------- -----------------
-  AREA            `area`
-  ARTIST          `artist`
-  GENRE           `genre`
-  EVENT           `event`
-  INSTRUMENT      `instrument`
-  LABEL           `label`
-  PLACE           `place`
-  RECORDING       `recording`
-  RELEASE         `release`
-  RELEASE_GROUP   `release-group`
-  RATING          `rating`
-  WORK            `work`
-  URL             `url`
+| Enum          | Path           |
+|---------------|----------------|
+| AREA          | `area`         |
+| ARTIST        | `artist`       |
+| GENRE         | `genre`        |
+| EVENT         | `event`        |
+| INSTRUMENT    | `instrument`   |
+| LABEL         | `label`        |
+| PLACE         | `place`        |
+| RECORDING     | `recording`    |
+| RELEASE       | `release`      |
+| RELEASE_GROUP | `release-group`|
+| RATING        | `rating`       |
+| WORK          | `work`         |
+| URL           | `url`          |
 
-------------------------------------------------------------------------
+---
 
 ### 📑 SearchField (campos disponibles en queries genéricas)
 
-  -----------------------------------------------------------------------
-  Categoría                                 Campos
-  ----------------------------------------- -----------------------------
-  Comunes                                   alias, tag, comment
+| Categoría | Campos |
+|-----------|--------|
+| **Comunes** | alias, tag, comment |
+| **Artist** | artist, artistname, arid, sortname |
+| **Recording** | recording, recordingaccent, isrc, rid, reid, rgid, dur, qdur, video, creditname, tid |
+| **Release** | release, releasegroup, country, format, status, primarytype, secondarytype, date, firstreleasedate, label, catno, barcode, lang |
+| **Work** | work, iswc, type |
+| **Series** | series |
+| **URL** | url |
+| **Otros** | place, event, instrument, genre |
 
-  Artist                                    artist, artistname, arid,
-                                            sortname
-
-  Recording                                 recording, recordingaccent,
-                                            isrc, rid, reid, rgid, dur,
-                                            qdur, video, creditname, tid
-
-  Release                                   release, releasegroup,
-                                            country, format, status,
-                                            primarytype, secondarytype,
-                                            date, firstreleasedate,
-                                            label, catno, barcode, lang
-
-  Work                                      work, iswc, type
-
-  Series                                    series
-
-  URL                                       url
-
-  Otros                                     place, event, instrument,
-                                            genre
-  -----------------------------------------------------------------------
-
-------------------------------------------------------------------------
+---
 
 ### 📦 Search Responses disponibles
 
-  Entidad         Response
-  --------------- ------------------------
-  Annotation      `AnnotationResponse`
-  Area            `AreaResponse`
-  CdStub          `CdStubsResponse`
-  Event           `EventResponse`
-  Instrument      `InstrumentResponse`
-  Label           `LabelResponse`
-  Recording       `RecordingResponse`
-  Release         `ReleaseResponse`
-  Artist          `ArtistResponse`
-  Release Group   `ReleaseGroupResponse`
-  Serie           `SerieResponse`
-  Tag             `TagResponse`
-  Url             `UrlResponse`
-  Work            `WorkResponse`
-  Place           `PlaceResponse`
+| Entidad       | Response               |
+|---------------|------------------------|
+| Annotation    | `AnnotationResponse`   |
+| Area          | `AreaResponse`         |
+| CdStub        | `CdStubsResponse`      |
+| Event         | `EventResponse`        |
+| Instrument    | `InstrumentResponse`   |
+| Label         | `LabelResponse`        |
+| Recording     | `RecordingResponse`    |
+| Release       | `ReleaseResponse`      |
+| Artist        | `ArtistResponse`       |
+| Release Group | `ReleaseGroupResponse` |
+| Serie         | `SerieResponse`        |
+| Tag           | `TagResponse`          |
+| Url           | `UrlResponse`          |
+| Work          | `WorkResponse`         |
+| Place         | `PlaceResponse`        |
 
-------------------------------------------------------------------------
+---
 
 ### 📦 Lookup Responses disponibles
 
-  Entidad         Response
-  --------------- ------------------------------
-  Area            `AreaLookupResponse`
-  Artist          `ArtistLookupResponse`
-  Event           `EventLookupResponse`
-  Genre           `GenreLookupResponse`
-  Instrument      `InstrumentLookupResponse`
-  Label           `LabelLookupResponse`
-  Place           `PlaceLookupResponse`
-  Recording       `RecordingLookupResponse`
-  Release         `ReleaseLookupResponse`
-  Release Group   `ReleaseGroupLookupResponse`
-  Url             `UrlLookupResponse`
-  Work            `WorkLookupResponse`
+| Entidad       | Response                     |
+|---------------|------------------------------|
+| Area          | `AreaLookupResponse`         |
+| Artist        | `ArtistLookupResponse`       |
+| Event         | `EventLookupResponse`        |
+| Genre         | `GenreLookupResponse`        |
+| Instrument    | `InstrumentLookupResponse`   |
+| Label         | `LabelLookupResponse`        |
+| Place         | `PlaceLookupResponse`        |
+| Recording     | `RecordingLookupResponse`    |
+| Release       | `ReleaseLookupResponse`      |
+| Release Group | `ReleaseGroupLookupResponse` |
+| Url           | `UrlLookupResponse`          |
+| Work          | `WorkLookupResponse`         |
 
-------------------------------------------------------------------------
 
 
 
