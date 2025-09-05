@@ -25,16 +25,6 @@ android {
                 "proguard-rules.pro"
             )
         }
-        create("minifiedDebug") {
-            initWith(getByName("debug"))
-            isDebuggable = false
-            isMinifyEnabled = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-            signingConfig = signingConfigs.getByName("debug")
-        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
