@@ -54,7 +54,7 @@ implementation("com.github.hall9zeha:Music-Brainz-Android-Client:1.0.0")
 ## Inicialización del Cliente
 
 ``` kotlin
-val mbService = MusicBrainzClient(
+val mbClient = MusicBrainzClient(
     appName = "Test app",
     appVersion = "1.0.0",
     contact = "mail@mail.com"
@@ -78,7 +78,7 @@ val recordingQuery = RecordingQueryBuilder()
     .artist("Kidburn")
     .build()
 
-mbService.searchRecording(
+mbClient.searchRecording(
     query = recordingQuery,
     limit = 1,
     offset = 0
@@ -101,7 +101,7 @@ val genericQuery = GenericQueryBuilder()
     .field(SearchField.ARTIST,"Kidburn")
     .build()
 
-mbService.searchEntity<RecordingResponse>(
+mbClient.searchEntity<RecordingResponse>(
     entity = SearchEntity.RECORDING,
     query = genericQuery,
     limit = 1,
@@ -120,7 +120,7 @@ mbService.searchEntity<RecordingResponse>(
 ### 3. Lookup por *Recording*
 
 ``` kotlin
-mbService.lookupEntity<RecordingLookupResponse>(
+mbClient.lookupEntity<RecordingLookupResponse>(
     entity = LookupEntity.RECORDING,
     mbId = "b9ad642e-b012-41c7-b72a-42cf4911f9ff",
     inc = null // Si no se quiere obtener relaciones, se puede pasar null
@@ -144,7 +144,7 @@ val includeFields = GenericIncludeBuilder()
     .incAliases()
     .build()
 
-mbService.lookupEntity<RecordingLookupResponse>(
+mbClient.lookupEntity<RecordingLookupResponse>(
     entity = LookupEntity.RECORDING,
     mbId = "b9ad642e-b012-41c7-b72a-42cf4911f9ff",
     inc = includeFields
@@ -162,7 +162,7 @@ mbService.lookupEntity<RecordingLookupResponse>(
 ### 5. Obtener Cover Art por MBID
 
 ``` kotlin
-mbService.fetchCoverArt(mbId = "99b09d02-9cc9-3fed-8431-f162165a9371") {
+mbClient.fetchCoverArt(mbId = "99b09d02-9cc9-3fed-8431-f162165a9371") {
     it.onSuccess { coverArtResponse ->
         Log.d("RESPONSE_MUZIC_COVER_ART", "Éxito: $coverArtResponse")
     }
@@ -176,7 +176,7 @@ mbService.fetchCoverArt(mbId = "99b09d02-9cc9-3fed-8431-f162165a9371") {
 ### 6. Obtener Cover Art (solo thumbnails)
 
 ``` kotlin
-mbService.fetchCoverArtThumbnail(mbId = "99b09d02-9cc9-3fed-8431-f162165a9371") {
+mbClient.fetchCoverArtThumbnail(mbId = "99b09d02-9cc9-3fed-8431-f162165a9371") {
     it.onSuccess { coverArtResponse ->
         Log.d("RESPONSE_MUZIC_COVER_THUMBNAIL", "Éxito: $coverArtResponse")
     }
@@ -190,7 +190,7 @@ mbService.fetchCoverArtThumbnail(mbId = "99b09d02-9cc9-3fed-8431-f162165a9371") 
 ### 7. Cover Art frontal o trasero
 
 ``` kotlin
-mbService.fetchCoverArtSide(
+mbClient.fetchCoverArtSide(
     mbId = "99b09d02-9cc9-3fed-8431-f162165a9371",
     side = COVER_ART_BOTH_SIDES, // Por defecto es COVER_ART_FRONT
     size = CoverSize.S_500        // Por defecto es CoverSize.S_250
@@ -209,7 +209,7 @@ mbService.fetchCoverArtSide(
 ### 8. Cover Art por título y artista
 
 ``` kotlin
-mbService.fetchCoverArtByTitleAndArtist(
+mbClient.fetchCoverArtByTitleAndArtist(
     title = "¿Sabes?",
     artist = "Álex ubago",
     side = COVER_ART_BOTH_SIDES, // Por defecto es COVER_ART_FRONT

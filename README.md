@@ -22,9 +22,9 @@ search, lookups, relationships, and cover art.
 
 ![Status](https://img.shields.io/badge/status-in%20progress-yellow)
 
-## Instalación
+## How to install
 
-En el archivo `settings.gradle.kts` agrega el repositorio de JitPack:
+In the archive `settings.gradle.kts` add the JitPack repository:
 
 ``` kotlin
 dependencyResolutionManagement {
@@ -36,21 +36,21 @@ dependencyResolutionManagement {
 }
 ```
 
-En tu archivo `build.gradle.kts` agrega la dependencia:
+In the archive `build.gradle.kts` add the dependency:
 
 ``` kotlin
 implementation("com.github.hall9zeha:Music-Brainz-Android-Client:1.0.0")
 ```
 
-## Ejemplo de uso
+## How to use
 
-### Inicialización del cliente
+### Client initialization
 
 ``` kotlin
 // It is not mandatory to pass arguments, but it is recommended to include appName, appVersion,
 // and contact information. This helps MusicBrainz identify your client, optimize requests,
 // and avoid being flagged as spam or abusive usage.
-val mbService = MusicBrainzClient(
+val mbClient = MusicBrainzClient(
     appName = "Test app",
     appVersion = "1.0.0",
     contact = "mail@mail.com"
@@ -67,7 +67,7 @@ val recordingQuery = RecordingQueryBuilder()
     .artist("Kidburn")
     .build()
 
-mbService.searchRecording(
+mbClient.searchRecording(
     query = recordingQuery,
     limit = 1,
     offset = 0
@@ -90,7 +90,7 @@ val genericQuery = GenericQueryBuilder()
     .field(SearchField.ARTIST, "Kidburn")
     .build()
 
-mbService.searchEntity<RecordingResponse>(
+mbClient.searchEntity<RecordingResponse>(
     entity = SearchEntity.RECORDING,
     query = genericQuery,
     limit = 1,
@@ -109,7 +109,7 @@ mbService.searchEntity<RecordingResponse>(
 #### Lookup by MBID
 
 ``` kotlin
-mbService.lookupEntity<RecordingLookupResponse>(
+mbClient.lookupEntity<RecordingLookupResponse>(
     entity = LookupEntity.RECORDING,
     mbId = "b9ad642e-b012-41c7-b72a-42cf4911f9ff",
     inc = null // Pass null if you don’t want relations
@@ -133,7 +133,7 @@ val includeFields = GenericIncludeBuilder()
     .incAliases()
     .build()
 
-mbService.lookupEntity<RecordingLookupResponse>(
+mbClient.lookupEntity<RecordingLookupResponse>(
     entity = LookupEntity.RECORDING,
     mbId = "b9ad642e-b012-41c7-b72a-42cf4911f9ff",
     inc = includeFields
@@ -155,7 +155,7 @@ val releaseQuery = ReleaseQueryBuilder()
     .releaseId("4ad149df-86f9-47c5-96f3-8db9ffd66da4")
     .build()
 
-mbService.getReleaseById(releaseQuery) {
+mbClient.getReleaseById(releaseQuery) {
     it.onSuccess {
         Log.d("RESPONSE_MUZIC_RELEASE", "Success: $it")
     }
@@ -171,7 +171,7 @@ mbService.getReleaseById(releaseQuery) {
 #### By MBID (full object)
 
 ``` kotlin
-mbService.fetchCoverArt(mbId = "99b09d02-9cc9-3fed-8431-f162165a9371") {
+mbClient.fetchCoverArt(mbId = "99b09d02-9cc9-3fed-8431-f162165a9371") {
     it.onSuccess { coverArtResponse ->
         Log.d("RESPONSE_MUZIC_COVER_ART", "Success: $coverArtResponse")
     }
@@ -185,7 +185,7 @@ mbService.fetchCoverArt(mbId = "99b09d02-9cc9-3fed-8431-f162165a9371") {
 #### Thumbnails
 
 ``` kotlin
-mbService.fetchCoverArtThumbnail(mbId = "99b09d02-9cc9-3fed-8431-f162165a9371") {
+mbClient.fetchCoverArtThumbnail(mbId = "99b09d02-9cc9-3fed-8431-f162165a9371") {
     it.onSuccess { coverArtResponse ->
         Log.d("RESPONSE_MUZIC_COVER_THUMBNAIL", "Success: $coverArtResponse")
     }
@@ -199,7 +199,7 @@ mbService.fetchCoverArtThumbnail(mbId = "99b09d02-9cc9-3fed-8431-f162165a9371") 
 #### Front or Back
 
 ``` kotlin
-mbService.fetchCoverArtSide(
+mbClient.fetchCoverArtSide(
     mbId = "99b09d02-9cc9-3fed-8431-f162165a9371",
     side = COVER_ART_BOTH_SIDES, // Default: COVER_ART_FRONT
     size = CoverSize.S_500 // Default: CoverSize.S_250
@@ -222,7 +222,7 @@ mbService.fetchCoverArtSide(
 // Both parameters are required to improve accuracy and reduce extra results.
 // If `onlyFirst` is enabled, returns the first matching cover art; otherwise,
 // returns all available URLs, which may take longer due to the more complex query.
-mbService.fetchCoverArtByTitleAndArtist(
+mbClient.fetchCoverArtByTitleAndArtist(
     title = "¿Sabes?",
     artist = "Álex ubago",
     side = COVER_ART_BOTH_SIDES, // Default: COVER_ART_FRONT
