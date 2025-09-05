@@ -1,5 +1,7 @@
 package com.barryzeha.musicbrainzclient.common.utils
 
+import androidx.annotation.Keep
+
 /****
  * Project MusicBrainz
  * Created by Barry Zea H. on 23/08/25.
@@ -9,6 +11,7 @@ package com.barryzeha.musicbrainzclient.common.utils
 /*
 * Generic class
 * */
+@Keep
 class ReleaseQueryBuilder {
     private val parts = mutableListOf<String>()
 

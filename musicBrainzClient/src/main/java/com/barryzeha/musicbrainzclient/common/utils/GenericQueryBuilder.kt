@@ -1,5 +1,6 @@
 package com.barryzeha.musicbrainzclient.common.utils
 
+import androidx.annotation.Keep
 import com.barryzeha.musicbrainzclient.common.QueryField
 
 /****
@@ -23,6 +24,7 @@ import com.barryzeha.musicbrainzclient.common.QueryField
  * // Produces: artist:"Daft Punk" AND release:"Discovery"
  * ```
  */
+@Keep
 class GenericQueryBuilder {
     private val parts = mutableListOf<String>()
     fun field(field: QueryField, value: String) = apply {

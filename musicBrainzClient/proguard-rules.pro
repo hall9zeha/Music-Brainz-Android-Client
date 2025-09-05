@@ -19,4 +19,6 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-keep class com.barryzeha.musicbrainzclient.** { *; }
 -keep class com.barryzeha.musicbrainzclient.model.** { *; }
+-dontwarn java.lang.invoke.StringConcatFactory

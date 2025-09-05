@@ -33,6 +33,7 @@ interface MbRepository {
     ): MbResponse<T>
     suspend  fun<T: Any> lookupEntity(entity: LookupEntity,mbId: String,inc: String?=null,clazz: KClass<T>): MbResponse<T>
     suspend fun fetchCoverArt(mbId: String): MbResponse<CoverArtResponse>
+    suspend fun fetchCoverArtByReleaseGroup(mbId:String): MbResponse<CoverArtResponse>
     suspend fun fetchCoverArtThumbnails(mbId:String): MbResponse<List<Thumbnails>>
     suspend fun fetchCovertArt(mbId: String, side:Int, size: CoverSize):MbResponse<CoverArtUrls>
     suspend fun fetchCoverArtByTitleAndArtist(title: String, artist:String, side:Int, size: CoverSize, firstOnly:Boolean):MbResponse<List<CoverArtUrls>>

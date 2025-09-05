@@ -1,5 +1,7 @@
 package com.barryzeha.musicbrainzclient.common
 
+import androidx.annotation.Keep
+
 /****
  * Project MusicBrainz
  * Created by Barry Zea H. on 26/08/25.
@@ -18,6 +20,7 @@ package com.barryzeha.musicbrainzclient.common
  * /ws/2/artist/{mbid}?inc=aliases+tags
  * ```
  */
+@Keep
 enum class IncludeField(val path:String) {
     ALIASES("aliases"),
     ARTIST_CREDITS("artist-credits"),

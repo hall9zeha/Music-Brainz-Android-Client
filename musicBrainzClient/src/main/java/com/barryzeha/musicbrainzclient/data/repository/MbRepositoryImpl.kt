@@ -69,6 +69,10 @@ class MbRepositoryImpl(private val appName:String?=null,private val appVersion:S
         return musicBrainzService.fetchCoverArt(mbId,side,size)
     }
 
+    override suspend fun fetchCoverArtByReleaseGroup(mbId: String): MbResponse<CoverArtResponse> {
+        return musicBrainzService.fetchCoverArtByReleaseGroup(mbId)
+    }
+
     override suspend fun fetchCoverArtByTitleAndArtist(
         title: String,
         artist:String,

@@ -1,11 +1,13 @@
 package com.barryzeha.musicbrainzclient.common.utils
 
+import androidx.annotation.Keep
+
 /****
  * Project MusicBrainz
  * Created by Barry Zea H. on 23/08/25.
  * Copyright (c)  All rights reserved.
  ***/
-
+@Keep
 class ArtistQueryBuilder {
     private val parts = mutableListOf<String>()
 

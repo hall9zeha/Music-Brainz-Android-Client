@@ -1,5 +1,7 @@
 package com.barryzeha.musicbrainzclient.common
 
+import androidx.annotation.Keep
+
 /****
  * Project MusicBrainz
  * Created by Barry Zea H. on 24/08/25.
@@ -22,6 +24,7 @@ interface QueryField{ val key:String}
  * // Produces: artist:"Daft Punk" AND release:"Discovery"
  * ```
  */
+@Keep
 enum class SearchField(override val key: String): QueryField {
     // ---- Comunes ----
     ALIAS("alias"),

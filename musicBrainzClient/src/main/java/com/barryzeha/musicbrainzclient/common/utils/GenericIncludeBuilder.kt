@@ -1,5 +1,6 @@
 package com.barryzeha.musicbrainzclient.common.utils
 
+import androidx.annotation.Keep
 import com.barryzeha.musicbrainzclient.common.IncludeField
 
 /****
@@ -25,6 +26,7 @@ import com.barryzeha.musicbrainzclient.common.IncludeField
  * // Produces: aliases+tags+recordings
  * ```
  */
+@Keep
 class GenericIncludeBuilder{
 
     private val parts = mutableListOf<String>()

@@ -1,11 +1,13 @@
 package com.barryzeha.musicbrainzclient.common
 
+import androidx.annotation.Keep
+
 /****
  * Project MusicBrainz
  * Created by Barry Zea H. on 24/08/25.
  * Copyright (c)  All rights reserved.
  ***/
-
+@Keep
 enum class SearchEntity(val path:String) {
     AREA("area"),
     ARTIST("artist"),

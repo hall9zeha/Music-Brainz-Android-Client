@@ -1,5 +1,6 @@
 package com.barryzeha.musicbrainzclient.common
 
+import androidx.annotation.Keep
 import com.barryzeha.musicbrainzclient.data.model.entity.coverentity.CoverImage
 import com.barryzeha.musicbrainzclient.data.model.entity.response.ErrorResponse
 import com.barryzeha.musicbrainzclient.data.model.entity.response.MbResponse
@@ -17,6 +18,7 @@ import kotlin.reflect.KClass
 
 
 @Suppress("DEPRECATION")
+@Keep
 suspend fun <T:Any> processResponse(clazz: KClass<T>, block: suspend () -> HttpResponse): MbResponse<T>{
    return try{
        val response = block()
@@ -46,6 +48,7 @@ suspend fun <T:Any> processResponse(clazz: KClass<T>, block: suspend () -> HttpR
    }
 
 }
+@Keep
 suspend inline fun <reified T> processResponses(block:suspend()-> List<HttpResponse>): MbResponse<List<T>>{
     var responsesProcessed : MutableList<T> = mutableListOf()
     return try{
@@ -72,12 +75,12 @@ suspend inline fun <reified T> processResponses(block:suspend()-> List<HttpRespo
     }
 
 }
-
+@Keep
 inline fun <T> MbResponse<T>.onSuccess(action:(T)->Unit): MbResponse<T>{
     if(this is MbResponse.Success) action(response)
     return this
 }
-
+@Keep
 inline fun <T> MbResponse<T>.onError(action:(ErrorResponse)->Unit): MbResponse<T>{
     if(this is MbResponse.Error) action(error)
     return this

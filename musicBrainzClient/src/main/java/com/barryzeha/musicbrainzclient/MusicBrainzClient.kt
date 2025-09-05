@@ -1,5 +1,6 @@
 package com.barryzeha.musicbrainzclient
 
+import androidx.annotation.Keep
 import com.barryzeha.musicbrainzclient.common.COVER_ART_FRONT
 import com.barryzeha.musicbrainzclient.common.CoverSize
 import com.barryzeha.musicbrainzclient.common.LookupEntity
@@ -34,6 +35,7 @@ import kotlinx.coroutines.launch
  * and to avoid restrictions.
  */
 
+@Keep
 class MusicBrainzClient(private val appName:String?=null,private val appVersion:String?=null, private val contact:String?=null) {
     @PublishedApi
     internal val mainScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
@@ -53,6 +55,7 @@ class MusicBrainzClient(private val appName:String?=null,private val appVersion:
     }
     // Generic requests for all entities with  search mode support
     // Search mode not support include fields
+
     inline fun <reified T: Any> searchEntity(
         entity: SearchEntity,
         query: String,
@@ -83,6 +86,15 @@ class MusicBrainzClient(private val appName:String?=null,private val appVersion:
 
     ){ mainScope.launch {
             val response= repository.fetchCoverArt(mbId)
+            callback(response)
+        }
+    }
+    fun fetchCoverArtByReleaseGroup(
+        mbId: String,
+        callback:(MbResponse<CoverArtResponse>)->Unit
+    ){
+        mainScope.launch {
+            val response=repository.fetchCoverArtByReleaseGroup(mbId)
             callback(response)
         }
     }

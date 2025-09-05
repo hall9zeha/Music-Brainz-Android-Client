@@ -86,6 +86,12 @@ class MusicBrainzService(private val appName:String?=null,
             coverArtClient.get("release/$mbId")
         }
     }
+    // Specific fetches function for cover art archive by release-group id
+    suspend fun fetchCoverArtByReleaseGroup(mbId: String):MbResponse<CoverArtResponse>{
+        return processResponse(CoverArtResponse::class) {
+            coverArtClient.get("release-group/$mbId")
+        }
+    }
     // Specific request to get only thumbnails url fo cover art
     suspend fun fetchCoverArtThumbnails(mbId:String): MbResponse<List<Thumbnails>>{
         val response = processResponse(CoverArtResponse::class) {
@@ -130,6 +136,7 @@ class MusicBrainzService(private val appName:String?=null,
             }
         }
     }
+
     // Specific search function for cover art whit name of track
     // only get first match for default
     suspend fun fetchCoverArtByTitleAndArtist(title:String, artist:String, side:Int, size: CoverSize, firstOnly:Boolean=true):MbResponse<List<CoverArtUrls>>{
