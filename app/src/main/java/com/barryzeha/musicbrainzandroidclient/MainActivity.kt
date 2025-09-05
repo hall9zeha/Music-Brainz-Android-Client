@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
             offset = 0
         ) { response ->
                response.onSuccess {
-                   Log.d("RESPONSE_MUZIC", "Éxito: $it")
+                   Log.d("RESPONSE_MUZIC", "Success: $it")
 
                }
                 response.onError{
