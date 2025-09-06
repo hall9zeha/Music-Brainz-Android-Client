@@ -8,7 +8,8 @@ Esta librería realiza todas las llamadas a la API de manera interna y
 solo expone métodos sencillos para que los desarrolladores puedan
 integrarla fácilmente en sus aplicaciones.
 
-Actualmente soporta:\
+### Actualmente soporta
+
 - **Búsquedas (Search)**\
 - **Consultas directas (Lookup)**\
 - **Opciones de relaciones (Include)**\
@@ -22,6 +23,10 @@ Actualmente soporta:\
 
 ![Status](https://img.shields.io/badge/status-in%20progress-yellow)
 
+## Requisitos
+
+- minSdk 24
+- Java versión de compilación: 21 (configura `compileOptions` y `kotlinOptions` para usar `JavaVersion.VERSION_21` y `jvmTarget = "21"`)
 
 
 ## Instalación
@@ -49,6 +54,11 @@ implementation("com.github.hall9zeha:Music-Brainz-Android-Client:1.0.0")
 
 ```
 
+Recuerde colocar el permiso de acceso a internet en el manifest de su aplicación:
+```xml
+<uses-permission android:name="android.permission.INTERNET"/>
+```
+
 ------------------------------------------------------------------------
 
 ## Inicialización del Cliente
@@ -69,6 +79,9 @@ val mbClient = MusicBrainzClient(
 ------------------------------------------------------------------------
 
 ## Ejemplos de Uso
+
+Este proyecto implementa dos consultas específicas para MusicBrainz: una para Recording (con search) y otra para Release (con lookup), a modo de prueba. Sin embargo, gracias al uso de las consultas genéricas de Search y Lookup, junto con los generadores de consultas dinámicas para search y los parámetros relations o includes para lookup, es posible realizar casi cualquier tipo de petición a la API de MusicBrainz.
+
 
 ### 1. Búsqueda específica por *Recording*
 

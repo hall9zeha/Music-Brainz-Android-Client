@@ -8,12 +8,12 @@ API](https://musicbrainz.org/doc/MusicBrainz_API) on Android.\
 It allows performing search, lookup, and fetching cover art in a simple
 and structured way.
 
-Currently supports:\
+### Currently supports
 
-Search\
-Direct lookups\
-Relationship options (Include)\
-Album cover art retrieval (Cover Art)
+- Search
+- Direct lookups
+- Relationship options (Include)
+- Album cover art retrieval (Cover Art)
 
 ⚠️ The library is a work in progress and currently only includes support for
 search, lookups, relationships, and cover art.
@@ -21,6 +21,12 @@ search, lookups, relationships, and cover art.
 ## Status
 
 ![Status](https://img.shields.io/badge/status-in%20progress-yellow)
+
+## Requirements
+
+- minSdk 24
+- Java compile version: 21 (configure `compileOptions` and `kotlinOptions` to use `JavaVersion.VERSION_21` and `jvmTarget = "21"`)
+
 
 ## How to install
 
@@ -42,7 +48,16 @@ In the archive `build.gradle.kts` add the dependency:
 implementation("com.github.hall9zeha:Music-Brainz-Android-Client:1.0.0")
 ```
 
+Remember to add the internet access permission in your application's manifest:
+
+```xml
+<uses-permission android:name="android.permission.INTERNET"/>
+```
+
+
 ## How to use
+
+This project implements two specific queries for MusicBrainz: one for Recording (using search) and another for Release (using lookup), as a proof of concept. However, by utilizing the generic Search and Lookup queries, along with dynamic query generators for search and relations or includes parameters for lookup, almost any request can be made to the MusicBrainz API.
 
 ### Client initialization
 
@@ -82,7 +97,26 @@ mbClient.searchRecording(
 }
 ```
 
-#### Generic query by fields
+#### Specific search and query from Release
+
+``` kotlin
+val releaseQuery = ReleaseQueryBuilder()
+    .releaseId("4ad149df-86f9-47c5-96f3-8db9ffd66da4")
+    .build()
+
+mbClient.getReleaseById(releaseQuery) {
+    it.onSuccess {
+        Log.d("RESPONSE_MUZIC_RELEASE", "Success: $it")
+    }
+    it.onError {
+        Log.e("RESPONSE_MUZIC_RELEASE", "Error ${it.errorCode}: ${it.message}")
+        it.cause?.printStackTrace()
+    }
+}
+```
+
+
+#### Generic Search with a generic query from Recording
 
 ``` kotlin
 val genericQuery = GenericQueryBuilder()
@@ -148,23 +182,7 @@ mbClient.lookupEntity<RecordingLookupResponse>(
 }
 ```
 
-#### Release query
 
-``` kotlin
-val releaseQuery = ReleaseQueryBuilder()
-    .releaseId("4ad149df-86f9-47c5-96f3-8db9ffd66da4")
-    .build()
-
-mbClient.getReleaseById(releaseQuery) {
-    it.onSuccess {
-        Log.d("RESPONSE_MUZIC_RELEASE", "Success: $it")
-    }
-    it.onError {
-        Log.e("RESPONSE_MUZIC_RELEASE", "Error ${it.errorCode}: ${it.message}")
-        it.cause?.printStackTrace()
-    }
-}
-```
 
 ### Cover Art
 

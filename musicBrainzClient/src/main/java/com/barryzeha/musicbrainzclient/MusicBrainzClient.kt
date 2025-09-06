@@ -42,6 +42,14 @@ class MusicBrainzClient(private val appName:String?=null,private val appVersion:
     @PublishedApi
     internal val repository: MbRepository  by lazy { MbRepositoryImpl(appName,appVersion,contact) }
 
+    /**
+     * A Specific request from Recording
+     * @param query The search query string to find recordings.
+     * @param limit The maximum number of results to return. Defines how many results will be fetched per query.
+     * @param offset The offset from which to start fetching results, useful for paginated queries.
+     * @param callback Function to handle the response, which contains either a [RecordingResponse] object
+     *                 with the results or an error wrapped in [MbResponse].
+     */
     fun searchRecording(
         query: String,
         limit: Int,
@@ -55,7 +63,14 @@ class MusicBrainzClient(private val appName:String?=null,private val appVersion:
     }
     // Generic requests for all entities with  search mode support
     // Search mode not support include fields
-
+    /**
+     * @param entity The type of entity to search for, such as [SearchEntity.RECORDING], [SearchEntity.ARTIST], etc.
+     * @param query The search query string to search within the specified entity.
+     * @param limit The maximum number of results to return. Defines how many results will be fetched per query.
+     * @param offset The offset from which to start fetching results, useful for paginated queries.
+     * @param callback Function to handle the response, which contains either the results in a specific type [T] (such as [RecordingResponse], [ArtistResponse], etc.)
+     *                 or an error wrapped in [MbResponse].
+     */
     inline fun <reified T: Any> searchEntity(
         entity: SearchEntity,
         query: String,
@@ -69,6 +84,13 @@ class MusicBrainzClient(private val appName:String?=null,private val appVersion:
         }
     }
     // Generic lookup for all entities with  lookup mode support
+    /**
+     * @param entity The type of entity to look up, such as [LookupEntity.RECORDING], [LookupEntity.ARTIST], etc.
+     * @param mbId The MusicBrainz ID (MBID) of the entity to look up.
+     * @param inc Additional fields to include in the response, such as relationships (e.g., artist credits, aliases). Can be null if no additional data is needed.
+     * @param callback Function to handle the response, which contains either the looked-up entity in the specified type [T] (such as [RecordingLookupResponse], [ArtistLookupResponse], etc.)
+     *                 or an error wrapped in [MbResponse].
+     */
     inline fun <reified T:Any> lookupEntity(
         entity:LookupEntity,
         mbId: String,
@@ -80,6 +102,11 @@ class MusicBrainzClient(private val appName:String?=null,private val appVersion:
             callback(response)
         }
     }
+    /**
+     * @param mbId Release MBID used for the search.
+     * @param callback Function to handle the response, which contains either a complete object of [CoverArtResponse]
+     *                 or an error wrapped in [MbResponse].
+     */
     fun fetchCoverArt(
         mbId: String,
         callback:(MbResponse<CoverArtResponse>)-> Unit
@@ -89,6 +116,11 @@ class MusicBrainzClient(private val appName:String?=null,private val appVersion:
             callback(response)
         }
     }
+    /**
+     * @param mbId Release MBID used for the search.
+     * @param callback Function to handle the response, which contains either a complete object of [CoverArtResponse]
+     *                 or an error wrapped in [MbResponse].
+     */
     fun fetchCoverArtByReleaseGroup(
         mbId: String,
         callback:(MbResponse<CoverArtResponse>)->Unit
@@ -98,6 +130,11 @@ class MusicBrainzClient(private val appName:String?=null,private val appVersion:
             callback(response)
         }
     }
+    /**
+     * @param mbId Release MBID used for the search.
+     * @param callback Function to handle the response, which contains either a list of Urls
+     *                 or an error wrapped in [MbResponse].
+     */
     fun fetchCoverArtThumbnail(
         mbId: String,
         callback:(MbResponse<List<Thumbnails>>)-> Unit
@@ -107,6 +144,13 @@ class MusicBrainzClient(private val appName:String?=null,private val appVersion:
             callback(response)
         }
     }
+    /**
+    * @param mbId Release MBID used for the search.
+    * @param side Which cover art side(s) to fetch (front, back, or both). Defaults to [COVER_ART_FRONT].
+    * @param size Size of the cover art image. Defaults to 250px. Available sizes include [CoverSize.S_250],[CoverSize.S_500],[CoverSize.S_1200].
+    * @param callback Function to handle the response, which contains a object [CoverArtUrls] with urls to front or back image
+    *                 or an error wrapped in [MbResponse].
+    */
     fun fetchCoverArtSide(
         mbId:String,
         side:Int= COVER_ART_FRONT,
@@ -159,12 +203,15 @@ class MusicBrainzClient(private val appName:String?=null,private val appVersion:
             callback(response)
         }
     }
+    /**
+    * @param mbId Release MBID used for the search.
+    */
     fun getReleaseById(
-        id: String,
+        mbId: String,
         callback:(MbResponse<ReleaseResponse>)-> Unit
 
     ){ mainScope.launch {
-            val response= repository.searchReleaseById(id)
+            val response= repository.searchReleaseById(mbId)
             callback(response)
         }
     }

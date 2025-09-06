@@ -41,7 +41,7 @@ class MusicBrainzService(private val appName:String?=null,
         val client by lazy { HttpClientProvider.create(appName,appVersion,contact) }
         val coverArtClient by lazy { HttpClientProvider.createCoverArtClient() }
 
-    // Generic search function for different entities
+    // Generic search function for multiple entities
     suspend fun <T: Any>searchEntity(
         entity: SearchEntity,
         query: String,
@@ -60,7 +60,7 @@ class MusicBrainzService(private val appName:String?=null,
         }
 
     }
-    // Generic lookup function for different entities
+    // Generic lookup function for multiple entities
    suspend  fun<T: Any> lookupEntity(
         entity: LookupEntity,
         mbId: String,

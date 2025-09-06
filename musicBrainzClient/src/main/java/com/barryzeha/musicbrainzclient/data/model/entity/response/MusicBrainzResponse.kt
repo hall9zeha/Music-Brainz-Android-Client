@@ -194,7 +194,6 @@ data class InstrumentLookupResponse(
     val type: String? = null,
     val description: String? = null,
     val disambiguation: String? = null,
-    //val aliases: List<Alias> = emptyList()
 ): LookupIncludes()
 
 @Serializable
@@ -206,7 +205,6 @@ data class LabelLookupResponse(
     val disambiguation: String? = null,
     val lifeSpan: LifeSpan? = null,
     val labelCode: Int? = null,
-    //val releases: List<Release> = emptyList()
 ): LookupIncludes()
 
 @Serializable
@@ -230,7 +228,6 @@ data class RecordingLookupResponse(
     val video: Boolean? = null,
     @SerialName("artist-credit")
     val artistCredits: List<ArtistCredit> = emptyList(),
-    //val releases: List<Release> = emptyList()
 ): LookupIncludes()
 
 @Serializable
@@ -255,7 +252,6 @@ data class ReleaseGroupLookupResponse(
     val secondaryTypes: List<String> = emptyList(),
     val firstReleaseDate: String? = null,
     val artistCredits: List<ArtistCredit> = emptyList(),
-    //val releases: List<Release> = emptyList()
 ): LookupIncludes()
 
 @Serializable
